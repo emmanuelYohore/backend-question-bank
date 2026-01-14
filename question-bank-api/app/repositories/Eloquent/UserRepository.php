@@ -14,7 +14,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function getById($id)
     {
-        return User::findOrFail($id);
+        $userId = User::findOrFail($id);
+        if (empty($userId)) {
+            return "user pas trouvé";
+        }
+        return $userId;
     }
 
     public function create(array $data)

@@ -44,7 +44,7 @@ class UserController extends Controller
     {   
         $data = $request->validated();
         
-        if (isset($data['password'])) {
+        if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
         
