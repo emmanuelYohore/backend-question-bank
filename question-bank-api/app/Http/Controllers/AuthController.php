@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -13,33 +12,28 @@ class AuthController extends Controller
         private UserRepositoryInterface $userRepository
     ) {}
 
-    public function register(Request $request)
+
+    public function register(StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'surname' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role' => 'required|string|in:user,admin'
-        ]);
-           
-        $data['password'] = Hash::make($data['password']);
-
+        $data = $request->validated();
+        
         try {
-
             $user = $this->userRepository->create($data);
+            $token = JWTAuth::fromUser($user);
         } catch (\Throwable $e) {
             return response()->json([
                 'error' => 'Failed to register, please try again'
                 ], 500);
         }
+        
         return response()->json([
-            'message' => 'utilisateur créer avec succès',
-            'user' => $user
+            'message' => 'Utilisateur créé avec succès',
+            'user' => $user,
+            'access_token' => $token
         ], 201);
     }
 
-    public function login(Request $request)
+    public function login(StoreUserRequest $request)
     {
         $credentials = $request->only('email', 'password');
 

@@ -3,6 +3,7 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -18,14 +19,15 @@ class UserRepository implements UserRepositoryInterface
 
     public function create(array $data)
     {
+        $data['password'] = Hash::make($data['password']);
         return User::create($data);
     }
 
     public function update($id, array $data)
     {
-        $product = User::findOrFail($id);
-        $product->update($data);
-        return $product;
+        $user = User::findOrFail($id);
+        $user->update($data);
+        return $user;
     }
 
     public function delete($id)
