@@ -21,10 +21,18 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return $enqueteId;
     }
 
-    public function getEnqueteUserId($id){
-        $enqueteUser = Enquete::where('user_id', $id)->get();
-        return $enqueteUser;
+    public function getOneEnqueteForUserId($userId, $enqueteId)
+    {
+        return Enquete::where('user_id', $userId)
+                      ->where('id', $enqueteId)
+                      ->firstOrFail();
     }
+
+    public function getAllEnqueteForUserId($id){
+        $enquetesUser = Enquete::all()->where('user_id', $id);
+        return $enquetesUser;
+    }
+
 
     public function create(array $data)
     {

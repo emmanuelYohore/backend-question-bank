@@ -9,7 +9,7 @@ class Enquete extends Model
 {
     use HasFactory;
 
-    protected $table = 'enquete';
+    protected $table = 'enquetes';
 
     protected $fillable = [
         'user_id',

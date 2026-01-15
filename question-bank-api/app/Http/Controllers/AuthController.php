@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -33,9 +34,9 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(StoreUserRequest $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json([
