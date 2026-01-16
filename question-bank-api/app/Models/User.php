@@ -10,6 +10,8 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory;
 
+    protected $table = 'users';
+
     protected $fillable = ['name', 'surname', 'email', 'password', 'role'];
 
     protected $hidden = ['password'];
@@ -17,6 +19,11 @@ class User extends Authenticatable implements JWTSubject
     public function enquetes()
     {
         return $this->hasMany(Enquete::class);
+    }
+
+    public function bankItems()
+    {
+        return $this->hasMany(BanKItem::class);
     }
 
     public function getJWTIdentifier()
@@ -27,7 +34,7 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'role' => $this->role,
+            'name' => $this->name,
         ];
     }
 }

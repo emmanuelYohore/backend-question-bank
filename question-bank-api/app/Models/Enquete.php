@@ -29,5 +29,16 @@ class Enquete extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function bankItems()
+    {
+            return $this->belongsToMany(BankItem::class, 'enquete_banks');
+
+    }
+
+    public function reponseEnquetes()
+    {
+        return $this->hasMany(ReponseEnquete::class);
+    }
 }
 
