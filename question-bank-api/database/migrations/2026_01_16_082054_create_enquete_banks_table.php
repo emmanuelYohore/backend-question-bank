@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('enquete_banks', function (Blueprint $table) {
             $table->foreignId('enquete_id')->constrained('enquete')->onDelete('cascade');
             $table->foreignId('bank_id')->constrained('bank')->onDelete('cascade');
+            $table->unsignedInteger('ordre')->default(1);
+
             $table->primary(['enquete_id', 'bank_id']);
             $table->timestamps();
         });

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('mode')->default('systematique');
             $table->boolean('archiver')->default(false);
-            $table->unsignedInteger('ordre')->default(1);
             $table->timestamps();
         });
     }

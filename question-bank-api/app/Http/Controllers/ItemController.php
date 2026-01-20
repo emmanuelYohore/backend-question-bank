@@ -4,51 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBankItemRequest;
 use App\Http\Requests\UpdateBankItemRequest;
-use App\Repositories\Interfaces\BankItemRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\Interfaces\ItemRepositoryInterface;
 
-class BankItemController extends Controller
+class ItemController extends Controller
 {
-    protected $bankItemRepository;
+    protected $itemRepository;
 
     public function __construct(
-        BankItemRepositoryInterface $bankItemRepository
+        ItemRepositoryInterface $itemRepository
     ) {
-         $this->bankItemRepository = $bankItemRepository;
+         $this->itemRepository = $itemRepository;
     }
 
     public function index()
     {
-        return response()->json($this->bankItemRepository->getAll());
+        return response()->json($this->itemRepository->getAll());
     }
 
     public function store(StoreBankItemRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = Auth::id();
         
-        $bankItem = $this->bankItemRepository->create($data);
+        $item = $this->itemRepository->create($data);
         return response()->json([
-            "message"=> "bankItem crée avec succès",
-            "bankItem"=> $bankItem
+            "message"=> "item crée avec succès",
+            "item"=> $item
             ], 201);
     }
 
 
     public function show(string $id)
     {
-         return response()->json($this->bankItemRepository->getById($id));
+         return response()->json($this->itemRepository->getById($id));
     }
 
     
     public function update(UpdateBankItemRequest $request, string $id)
     {   
         $data = $request->validated();       
-        $bankItem = $this->bankItemRepository->update($id, $data);
+        $item = $this->itemRepository->update($id, $data);
         
         return response()->json([
-            "message" => "bankItem Updated.",
-            "bankItem" => $bankItem
+            "message" => "item Updated.",
+            "item" => $item
         ], 200);
     }
 
@@ -56,9 +54,9 @@ class BankItemController extends Controller
     public function destroy(string $id)
     {
         try {
-           $this->bankItemRepository->delete($id);
+           $this->itemRepository->delete($id);
             return response()->json([
-            'bankItem deleted'
+            'item deleted'
             ]);
         } catch (\Throwable $th) {
              return response()->json([

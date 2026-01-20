@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankItemController;
 use App\Http\Controllers\EnqueteController;
+use App\Http\Controllers\FormatReponseController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +17,24 @@ Route::controller(UserController::class)->group(function () {
     Route::put('v1/users/{id}', 'update');
     Route::get('v1/users/{id}', 'show');
     Route::delete('v1/users/{id}', 'destroy');
+
+});
+
+Route::controller(FormatReponseController::class)->group(function () {
+    Route::post('v1/format-reponses', 'store');
+    Route::get('v1/format-reponses', 'index');
+    Route::put('v1/format-reponses/{id}', 'update');
+    Route::get('v1/format-reponses/{id}', 'show');
+    Route::delete('v1/format-reponses/{id}', 'destroy');
+
+});
+
+Route::controller(ItemController::class)->group(function () {
+    Route::post('v1/item', 'store');
+    Route::get('v1/item', 'index');
+    Route::put('v1/item/{id}', 'update');
+    Route::get('v1/item/{id}', 'show');
+    Route::delete('v1/item/{id}', 'destroy');
 
 });
 
