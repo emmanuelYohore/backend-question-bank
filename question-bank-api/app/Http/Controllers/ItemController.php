@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBankItemRequest;
+use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateBankItemRequest;
+use App\Http\Requests\UpdateItemRequest;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
 
 class ItemController extends Controller
@@ -21,7 +23,7 @@ class ItemController extends Controller
         return response()->json($this->itemRepository->getAll());
     }
 
-    public function store(StoreBankItemRequest $request)
+    public function store(StoreItemRequest $request)
     {
         $data = $request->validated();
         
@@ -39,7 +41,7 @@ class ItemController extends Controller
     }
 
     
-    public function update(UpdateBankItemRequest $request, string $id)
+    public function update(UpdateItemRequest $request, string $id)
     {   
         $data = $request->validated();       
         $item = $this->itemRepository->update($id, $data);

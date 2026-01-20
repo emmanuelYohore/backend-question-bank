@@ -30,11 +30,11 @@ Route::controller(FormatReponseController::class)->group(function () {
 });
 
 Route::controller(ItemController::class)->group(function () {
-    Route::post('v1/item', 'store');
-    Route::get('v1/item', 'index');
-    Route::put('v1/item/{id}', 'update');
-    Route::get('v1/item/{id}', 'show');
-    Route::delete('v1/item/{id}', 'destroy');
+    Route::post('v1/items', 'store');
+    Route::get('v1/items', 'index');
+    Route::put('v1/items/{id}', 'update');
+    Route::get('v1/items/{id}', 'show');
+    Route::delete('v1/items/{id}', 'destroy');
 
 });
 

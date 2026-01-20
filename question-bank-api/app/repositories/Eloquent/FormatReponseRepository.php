@@ -14,9 +14,7 @@ class FormatReponseRepository implements FormatReponseRepositoryInterface
     public function getById($id)
     {
         $formatReponseId = FormatReponse::findOrFail($id);
-        if (empty($formatReponseId)) {
-            return "Format Reponse pas trouvé";
-        }
+        
         return $formatReponseId;
     }
 

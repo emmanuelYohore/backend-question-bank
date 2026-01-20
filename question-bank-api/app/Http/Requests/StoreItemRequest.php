@@ -19,12 +19,15 @@ class StoreItemRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'ordre' => 'required|integer',
-            'obligatoire' => 'sometimes|boolean',
+            'bank_item_id'      => 'required|exists:bank_items,id',
+            'format_reponse_id' => 'required|exists:format_reponses,id',
+            'question'          => 'required|string|max:255',
+            'ordre'             => 'required|integer',
+            'obligatoire'       => 'sometimes|boolean',
         ];
     }
 }

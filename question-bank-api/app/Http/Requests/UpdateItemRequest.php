@@ -21,10 +21,12 @@ class UpdateItemRequest extends FormRequest
      */
     public function rules(): array
     {
-          return [
-            'name' => 'sometimes|string|max:255',
-            'ordre' => 'sometimes|integer',
-            'obligatoire' => 'sometimes|boolean',
+        return [
+            'bank_item_id'      => 'sometimes|exists:bank_items,id',
+            'format_reponse_id' => 'sometimes|exists:format_reponses,id',
+            'question'          => 'sometimes|string|max:255',
+            'ordre'             => 'sometimes|integer',
+            'obligatoire'       => 'sometimes|boolean',
         ];
     }
 }

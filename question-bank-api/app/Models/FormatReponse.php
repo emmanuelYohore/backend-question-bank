@@ -9,9 +9,9 @@ class FormatReponse extends Model
     protected $table = "format_reponses";
     protected $fillable = ["name", "nb_min_select", "nb_max_select"] ;
 
-    public function item()
+    public function items()
     {
-        return $this->belongsTo(Item::class);
+        return $this->hasMany(Item::class, 'format_reponse_id');
     }
 
     public function modaliteReponses()
