@@ -6,8 +6,6 @@ use App\Http\Requests\StoreEnqueteRequest;
 use App\Http\Requests\UpdateEnqueteRequest;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
-
 class EnqueteController extends Controller
 {
     protected $enqueteRepository;

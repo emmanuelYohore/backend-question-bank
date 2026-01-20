@@ -14,7 +14,7 @@ class ModaliteReponse extends Model
         return $this->belongsTo(FormatReponse::class);
     }
 
-    public function responses()
+    public function reponses()
     {
         return $this->hasMany(Reponse::class);
     }

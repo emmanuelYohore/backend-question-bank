@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('enquete_banks', function (Blueprint $table) {
-            $table->foreignId('enquete_id')->constrained('enquete')->cascadeOnDelete();
-            $table->foreignId('bank_id')->constrained('bank')->cascadeOnDelete();
+            $table->foreignId('enquete_id')->constrained('enquete')->onDelete('cascade');
+            $table->foreignId('bank_id')->constrained('bank')->onDelete('cascade');
             $table->primary(['enquete_id', 'bank_id']);
             $table->timestamps();
         });
