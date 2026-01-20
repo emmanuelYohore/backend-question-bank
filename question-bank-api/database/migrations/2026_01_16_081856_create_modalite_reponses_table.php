@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('modalite_reponses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('format_reponse_id')->constrained('format_reponse')->cascadeOnDelete();
-            $table->string('intitulé');
+            $table->string('intitule');
             $table->string('valeur');
             $table->integer('ordre');
             $table->timestamps();

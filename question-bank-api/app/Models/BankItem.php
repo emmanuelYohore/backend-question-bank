@@ -27,15 +27,14 @@ class BankItem extends Model
 
     }
 
+    public function enqueteBank()
+    {
+        return $this->hasMany(EnqueteBank::class);
+    }
 
     public function items()
     {
         return $this->hasMany(Item::class);
-    }
-
-    public function format_reponse()
-    {
-        return $this->belongsTo(FormatReponse::class);
     }
 }
 

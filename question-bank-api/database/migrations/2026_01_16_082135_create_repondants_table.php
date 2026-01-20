@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('repondants', function (Blueprint $table) {
             $table->id();
             $table->string('session_id');
+            $table->foreignId('enquete_id')->constrained('enquetes')->cascadeOnDelete();
             $table->timestamps();
         });
     }

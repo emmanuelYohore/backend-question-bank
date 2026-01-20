@@ -11,11 +11,11 @@ class Item extends Model
 
     protected $table = 'items';
 
-    protected $fillable = ['bank_items_id','format_reponse_id','question','ordre','obligatoire'];
+    protected $fillable = ['bank_item_id','format_reponse_id','question','ordre','obligatoire'];
 
-    public function bankItems()
+    public function bankItem()
     {
-        return $this->hasMany(BankItem::class);
+        return $this->belongsTo(BankItem::class);
     }
 
     public function formatReponse()
@@ -23,8 +23,8 @@ class Item extends Model
         return $this->belongsTo(FormatReponse::class);
     }
 
-     public function reponseItems()
+    public function reponses()
     {
-        return $this->hasMany(ReponseItem::class);
+        return $this->hasMany(Reponse::class);
     }
 }

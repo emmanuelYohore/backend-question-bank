@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reponse_items', function (Blueprint $table) {
+        Schema::create('reponses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reponse_enquete_id')->constrained('reponse_enquetes')->cascadeOnDelete();
+            $table->foreignId('repondant_id')->constrained('repondants')->cascadeOnDelete();
             $table->foreignId('item_id')->constrained('items')->cascadeOnDelete();
             $table->foreignId('modalite_response_id')->constrained('modalite_responses')->cascadeOnDelete();
             $table->string('valeur_texte')->nullable();
@@ -21,12 +21,13 @@ return new class extends Migration
         });
     }
     
+    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('reponse_items');
+        Schema::dropIfExists('reponses');
     }
 };
