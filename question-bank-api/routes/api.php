@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('v1/auth/register', [AuthController::class, 'register']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);
+Route::post('v1/auth/refreshToken', [AuthController::class, 'refreshToken']);
 
 Route::controller(UserController::class)->group(function () {
     Route::post('v1/users', 'store');
@@ -49,7 +50,7 @@ Route::controller(BankItemController::class)->group(function () {
 });
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'jwt.refresh'])->group(function () {
 
     Route::post('v1/logout', [AuthController::class, 'logout']);
 

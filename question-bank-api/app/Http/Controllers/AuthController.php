@@ -51,6 +51,29 @@ class AuthController extends Controller
         ]);
     }
 
+    public function refreshToken()  {
+        try {
+            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json([
+                'message' => 'Token invalide'
+            ], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json([
+                'message' => 'Token expiré'
+            ], 401);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Erreur lors du rafraîchissement du token'
+            ], 500);
+        }
+       
+        return response()->json([
+            'access_token' => $newToken,
+            'message' => 'Token rafraîchi avec succès'
+        ]);
+    }
+
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());

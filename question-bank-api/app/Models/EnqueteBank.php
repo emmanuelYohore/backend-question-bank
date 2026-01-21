@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class EnqueteBank extends Model
 {
     protected $table = 'enquete_banks';
-    protected $fillable = ['enquete_id','bank_items_id','ordre' ];
+    protected $fillable = ['enquete_id','bank_item_id','ordre' ];
 
     public function enquete()
     {
         return $this->belongsTo(Enquete::class);
     }
 
-    public function items()
+    public function bankItem()
     {
         return $this->belongsTo(BankItem::class);
     }

@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('enquete_banks', function (Blueprint $table) {
-            $table->foreignId('enquete_id')->constrained('enquete')->onDelete('cascade');
-            $table->foreignId('bank_id')->constrained('bank')->onDelete('cascade');
+            $table->foreignId('enquete_id')->constrained('enquetes')->onDelete('cascade');
+            $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
             $table->unsignedInteger('ordre')->default(1);
 
-            $table->primary(['enquete_id', 'bank_id']);
+            $table->primary(['enquete_id', 'bank_item_id']);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enquete_banques');
+        Schema::dropIfExists('enquete_banks');
     }
 };
