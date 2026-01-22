@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBankItemRequest;
 use App\Http\Requests\UpdateBankItemRequest;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BankItemController extends Controller
 {
@@ -25,7 +25,7 @@ class BankItemController extends Controller
     public function store(StoreBankItemRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = Auth::id();
+        $data['user_id'] = JWTAuth::parseToken()->authenticate()->id;
         
         $bankItem = $this->bankItemRepository->create($data);
         return response()->json([

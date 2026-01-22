@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('format_reponses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type');       
             $table->unsignedInteger('nb_min_select')->default(1);
             $table->unsignedInteger('nb_max_select')->default(1);
             $table->timestamps();

@@ -5,6 +5,7 @@ use App\Http\Controllers\BankItemController;
 use App\Http\Controllers\EnqueteController;
 use App\Http\Controllers\FormatReponseController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ModaliteReponseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,15 @@ Route::controller(FormatReponseController::class)->group(function () {
 
 });
 
+Route::controller(ModaliteReponseController::class)->group(function () {
+    Route::post('v1/modalite-reponses', 'store');
+    Route::get('v1/modalite-reponses', 'index');
+    Route::put('v1/modalite-reponses/{id}', 'update');
+    Route::get('v1/modalite-reponses/{id}', 'show');
+    Route::delete('v1/modalite-reponses/{id}', 'destroy');
+
+});
+
 Route::controller(ItemController::class)->group(function () {
     Route::post('v1/items', 'store');
     Route::get('v1/items', 'index');
@@ -50,7 +60,7 @@ Route::controller(BankItemController::class)->group(function () {
 });
 
 
-Route::middleware(['auth:api', 'jwt.refresh'])->group(function () {
+Route::middleware('auth:api')->group(function () {
 
     Route::post('v1/logout', [AuthController::class, 'logout']);
 

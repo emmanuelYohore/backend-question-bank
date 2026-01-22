@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEnqueteRequest;
 use App\Http\Requests\UpdateEnqueteRequest;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 class EnqueteController extends Controller
 {
     protected $enqueteRepository;
@@ -24,7 +24,7 @@ class EnqueteController extends Controller
     public function store(StoreEnqueteRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = Auth::id();
+        $data['user_id'] = JWTAuth::parseToken()->authenticate()->id;
         
         $enquete = $this->enqueteRepository->create($data);
         return response()->json([

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->string('intitule');
-            $table->string('valeur');
+            $table->integer('valeur');
             $table->integer('ordre');
             $table->timestamps();
         });

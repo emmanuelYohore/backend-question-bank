@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateFormatReponseRequest extends FormRequest
+class StoreModaliteReponseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,10 @@ class UpdateFormatReponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|in:qcm,texte',
-            'type' => 'sometimes|string|in:qcm,texte|max:255',
-            'nb_min_select' => 'sometimes|integer',
-            'nb_max_select' => 'sometimes|integer',
+             'format_reponse_id'  => 'required|exists:format_reponses,id',
+             'intitule' => 'required|string|max:255',
+             'valeur' => 'required|integer',
+             'ordre' => 'required|integer'
         ];
     }
 }

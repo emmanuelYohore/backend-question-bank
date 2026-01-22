@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FormatReponse extends Model
 {
     protected $table = "format_reponses";
-    protected $fillable = ["name", "nb_min_select", "nb_max_select"] ;
+    protected $fillable = ["name", "type","nb_min_select", "nb_max_select"] ;
 
     public function items()
     {
