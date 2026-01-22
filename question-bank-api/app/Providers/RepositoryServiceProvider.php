@@ -7,12 +7,14 @@ use App\Repositories\Eloquent\EnqueteRepository;
 use App\Repositories\Eloquent\FormatReponseRepository;
 use App\Repositories\Eloquent\ItemRepository;
 use App\Repositories\Eloquent\ModaliteReponseRepository;
+use App\Repositories\Eloquent\ReponseRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
 use App\Repositories\Interfaces\FormatReponseRepositoryInterface;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
 use App\Repositories\Interfaces\ModaliteReponseRepositoryInterface;
+use App\Repositories\Interfaces\ReponseRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,7 +28,9 @@ class RepositoryServiceProvider extends ServiceProvider
       $this->app->bind(BankItemRepositoryInterface::class, BankItemRepository::class);
       $this->app->bind(FormatReponseRepositoryInterface::class, FormatReponseRepository::class);
       $this->app->bind(ItemRepositoryInterface::class, ItemRepository::class);
-            $this->app->bind(ModaliteReponseRepositoryInterface::class, ModaliteReponseRepository::class);
+      $this->app->bind(ModaliteReponseRepositoryInterface::class, ModaliteReponseRepository::class);
+      $this->app->bind(ReponseRepositoryInterface::class, ReponseRepository::class);
+
 
 
 
