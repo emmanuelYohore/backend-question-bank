@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankItemController;
+use App\Http\Controllers\EnqueteBankController;
 use App\Http\Controllers\EnqueteController;
 use App\Http\Controllers\FormatReponseController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModaliteReponseController;
+use App\Http\Controllers\RepondantController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +58,24 @@ Route::controller(ReponseController::class)->group(function () {
     Route::put('v1/reponses/{id}', 'update');
     Route::get('v1/reponses/{id}', 'show');
     Route::delete('v1/reponses/{id}', 'destroy');
+
+});
+
+Route::controller(RepondantController::class)->group(function () {
+    Route::post('v1/repondants', 'store');
+    Route::get('v1/repondants', 'index');
+    Route::put('v1/repondants/{id}', 'update');
+    Route::get('v1/repondants/{id}', 'show');
+    Route::delete('v1/repondants/{id}', 'destroy');
+
+});
+
+Route::controller(EnqueteBankController::class)->group(function () {
+    Route::post('v1/enquete-banks', 'store');
+    Route::get('v1/enquete-banks', 'index');
+    Route::put('v1/enquete-banks/{id}', 'update');
+    Route::get('v1/enquete-banks/{id}', 'show');
+    Route::delete('v1/enquete-banks/{id}', 'destroy');
 
 });
 

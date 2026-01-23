@@ -4,7 +4,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\ModaliteReponse;
 use App\Repositories\Interfaces\ModaliteReponseRepositoryInterface;
 
-class ModaliteReponseRepository  implements ModaliteReponseRepositoryInterface
+class ModaliteReponseRepository implements ModaliteReponseRepositoryInterface
 {
     public function getAll()
     {

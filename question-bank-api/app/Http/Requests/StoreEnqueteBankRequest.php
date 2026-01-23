@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreEnqueteRequest extends FormRequest
+class StoreEnqueteBankRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,13 +21,11 @@ class StoreEnqueteRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_message' => 'required|string',
-            'end_message' => 'required|string',
-            'archiver' => 'sometimes|boolean',
-            'url_enquete' => 'required|string|url|max:255'
+       return [
+            'enquete_id' => 'required|exists:enquetes,id',
+            'bank_item_id'      => 'required|exists:bank_items,id',        
+            'ordre' => 'required|integer',
+            
         ];
     }
 }
