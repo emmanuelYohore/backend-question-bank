@@ -44,8 +44,11 @@ class AuthController extends Controller
             ], 401);
         }
 
+        $user = JWTAuth::user();
+
         return response()->json([
             'access_token' => $token,
+            'user' => $user,
             'message' => 'Connexion réussi'
             
         ]);
@@ -81,5 +84,20 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Déconnecté avec succès'
         ]);
+    }
+
+    public function me()
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            
+            if (!$user) {
+                return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+            }
+            
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Token invalide'], 401);
+        }
     }
 }

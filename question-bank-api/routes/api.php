@@ -92,7 +92,8 @@ Route::controller(BankItemController::class)->group(function () {
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::post('v1/logout', [AuthController::class, 'logout']);
+    Route::post('v1/auth/logout', [AuthController::class, 'logout']);
+    Route::get('v1/auth/me', [AuthController::class, 'me']);
 
     Route::controller(EnqueteController::class)->group(function () {
         Route::post('v1/enquetes', 'store');
