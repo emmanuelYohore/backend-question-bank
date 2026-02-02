@@ -24,6 +24,10 @@ class FormatReponseController extends Controller
     public function store(StoreFormatReponseRequest $request)
     {
         $data = $request->validated();
+        if ( $data['type'] == 'texte') {
+           $data['nb_min_select'] = 1;
+           $data['nb_max_select'] = 1;
+        }
         
         $formatReponse = $this->formatReponseRepository->create($data);
         return response()->json([
