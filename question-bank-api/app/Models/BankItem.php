@@ -34,7 +34,7 @@ class BankItem extends Model
 
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->belongsToMany(Item::class, 'bank_item_items');
     }
 }
 

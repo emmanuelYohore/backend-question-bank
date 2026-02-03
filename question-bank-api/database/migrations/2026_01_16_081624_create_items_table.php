@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
             $table->foreignId('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->string('question')->nullable(false);
-            $table->integer('ordre');
             $table->boolean('obligatoire')->default(true);
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankItemController;
+use App\Http\Controllers\BankItemItemController;
 use App\Http\Controllers\EnqueteBankController;
 use App\Http\Controllers\EnqueteController;
 use App\Http\Controllers\FormatReponseController;
@@ -25,31 +26,12 @@ Route::controller(UserController::class)->group(function () {
 
 });
 
-Route::controller(FormatReponseController::class)->group(function () {
-    Route::post('v1/format-reponses', 'store');
-    Route::get('v1/format-reponses', 'index');
-    Route::put('v1/format-reponses/{id}', 'update');
-    Route::get('v1/format-reponses/{id}', 'show');
-    Route::delete('v1/format-reponses/{id}', 'destroy');
-
-});
-
-Route::controller(ModaliteReponseController::class)->group(function () {
-    Route::post('v1/modalite-reponses', 'store');
-    Route::get('v1/modalite-reponses', 'index');
-    Route::put('v1/modalite-reponses/{id}', 'update');
-    Route::get('v1/modalite-reponses/{id}', 'show');
-    Route::delete('v1/modalite-reponses/{id}', 'destroy');
-
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::post('v1/items', 'store');
-    Route::get('v1/items', 'index');
-    Route::put('v1/items/{id}', 'update');
-    Route::get('v1/items/{id}', 'show');
-    Route::delete('v1/items/{id}', 'destroy');
-
+Route::controller(BankItemItemController::class)->group(function () {
+    Route::post('v1/bank-item-items', 'store');
+    Route::get('v1/bank-item-items', 'index');
+    Route::put('v1/bank-item-items/{id}', 'update');
+    Route::get('v1/bank-item-items/{id}', 'show');
+    Route::delete('v1/bank-item-items/{id}', 'destroy');
 });
 
 Route::controller(ReponseController::class)->group(function () {
@@ -102,10 +84,37 @@ Route::middleware('auth:api')->group(function () {
         Route::get('v1/users/{userId}/enquetes/{enqueteId}', 'getOneEnqueteForUserId');
         Route::get('v1/users/{userId}/enquetes', 'getAllEnqueteForUserId');
     });
+    
+    Route::controller(FormatReponseController::class)->group(function () {
+        Route::post('v1/format-reponses', 'store');
+        Route::get('v1/format-reponses', 'index');
+        Route::put('v1/format-reponses/{id}', 'update');
+        Route::get('v1/format-reponses/{id}', 'show');
+        Route::delete('v1/format-reponses/{id}', 'destroy');
+
+    });
+
+    Route::controller(ItemController::class)->group(function () {
+        Route::post('v1/items', 'store');
+        Route::get('v1/items', 'index');
+        Route::put('v1/items/{id}', 'update');
+        Route::get('v1/items/{id}', 'show');
+        Route::delete('v1/items/{id}', 'destroy');
+
+    });
+
+    Route::controller(ModaliteReponseController::class)->group(function () {
+        Route::post('v1/modalite-reponses', 'store');
+        Route::get('v1/modalite-reponses', 'index');
+        Route::put('v1/modalite-reponses/{id}', 'update');
+        Route::get('v1/modalite-reponses/{id}', 'show');
+        Route::delete('v1/modalite-reponses/{id}', 'destroy');
+
+    });
 
     Route::controller(BankItemController::class)->group(function () {
         Route::post('v1/bank-items', 'store');      
         Route::put('v1/bank-items/{id}', 'update');      
         Route::delete('v1/bank-items/{id}', 'destroy');
-});
+    });
  });

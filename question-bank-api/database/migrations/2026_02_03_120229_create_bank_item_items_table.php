@@ -11,19 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('format_reponses', function (Blueprint $table) {
+        Schema::create('bank_item_items', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default("texte");       
-            $table->unsignedInteger('nb_min_select')->default(1);
-            $table->unsignedInteger('nb_max_select')->default(1);
+            $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
+            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->timestamps();
+            
+            // Empêcher les doublons
+            $table->unique(['bank_item_id', 'item_id']);
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('format_reponses');
+        Schema::dropIfExists('bank_item_items');
     }
 };

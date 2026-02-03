@@ -26,7 +26,6 @@ class StoreItemRequest extends FormRequest
             'bank_item_id'      => 'required|exists:bank_items,id',
             'format_reponse_id' => 'required|exists:format_reponses,id',
             'question'          => 'required|string|max:255',
-            'ordre'             => 'required|integer',
             'obligatoire'       => 'sometimes|boolean',
         ];
     }
