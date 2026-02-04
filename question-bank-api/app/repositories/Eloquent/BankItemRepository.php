@@ -20,6 +20,19 @@ class BankItemRepository implements BankItemRepositoryInterface
         return $bankItemId;
     }
 
+    public function getOneBankItemForUserId($userId, $bankItemId)
+    {
+        return BankItem::where('user_id', $userId)
+                      ->where('id', $bankItemId)
+                      ->firstOrFail();
+    }
+
+    public function getAllBankItemForUserId($id)
+    {
+        $bankItemsUser = BankItem::all()->where('user_id', $id);
+        return $bankItemsUser;
+    }
+
     public function create(array $data)
     {
         

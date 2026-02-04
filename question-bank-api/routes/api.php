@@ -71,6 +71,8 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(BankItemController::class)->group(function () {
         Route::get('v1/bank-items', 'index');
         Route::get('v1/bank-items/{id}', 'show');
+        Route::get('v1/users/{userId}/bank-items/{bankItemId}', 'getOneBankItemForUserId');
+        Route::get('v1/users/{userId}/bank-items', 'getAllBankItemForUserId');
         Route::post('v1/bank-items', 'store');      
         Route::put('v1/bank-items/{id}', 'update');      
         Route::delete('v1/bank-items/{id}', 'destroy');
