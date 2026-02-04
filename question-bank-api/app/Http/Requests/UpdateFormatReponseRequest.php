@@ -22,7 +22,7 @@ class UpdateFormatReponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'sometimes|string|in:qcm,texte|max:255',
+            'type' => 'sometimes|string|in:qcm,qcmu,evn,texte|max:255',
             'nb_min_select' => 'sometimes|integer',
             'nb_max_select' => 'sometimes|integer',
         ];

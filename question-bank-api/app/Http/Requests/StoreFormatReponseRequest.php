@@ -22,7 +22,7 @@ class StoreFormatReponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'required|string|in:qcm,texte|max:255',
+            'type' => 'required|string|in:qcm,qcmu,evn,texte|max:255',
             'nb_min_select' => 'sometimes|integer',
             'nb_max_select' => 'sometimes|integer',
         ];

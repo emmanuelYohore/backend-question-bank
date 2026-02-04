@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ModaliteReponse extends Model
 {
     protected $table = 'modalite_reponses';
-    protected $fillable = ['format_reponse_id','intitule','valeur','ordre'] ;
+    protected $fillable = ['format_reponse_id','intitule','valeur'] ;
 
     public function formatReponse()
     {

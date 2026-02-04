@@ -17,32 +17,6 @@ Route::post('v1/auth/register', [AuthController::class, 'register']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);
 Route::post('v1/auth/refreshToken', [AuthController::class, 'refreshToken']);
 
-Route::controller(UserController::class)->group(function () {
-    Route::post('v1/users', 'store');
-    Route::get('v1/users', 'index');
-    Route::put('v1/users/{id}', 'update');
-    Route::get('v1/users/{id}', 'show');
-    Route::delete('v1/users/{id}', 'destroy');
-
-});
-
-Route::controller(BankItemItemController::class)->group(function () {
-    Route::post('v1/bank-item-items', 'store');
-    Route::get('v1/bank-item-items', 'index');
-    Route::put('v1/bank-item-items/{id}', 'update');
-    Route::get('v1/bank-item-items/{id}', 'show');
-    Route::delete('v1/bank-item-items/{id}', 'destroy');
-});
-
-Route::controller(ReponseController::class)->group(function () {
-    Route::post('v1/reponses', 'store');
-    Route::get('v1/reponses', 'index');
-    Route::put('v1/reponses/{id}', 'update');
-    Route::get('v1/reponses/{id}', 'show');
-    Route::delete('v1/reponses/{id}', 'destroy');
-
-});
-
 Route::controller(RepondantController::class)->group(function () {
     Route::post('v1/repondants', 'store');
     Route::get('v1/repondants', 'index');
@@ -52,32 +26,14 @@ Route::controller(RepondantController::class)->group(function () {
 
 });
 
-Route::controller(EnqueteBankController::class)->group(function () {
-    Route::post('v1/enquete-banks', 'store');
-    Route::get('v1/enquete-banks', 'index');
-    Route::put('v1/enquete-banks/{id}', 'update');
-    Route::get('v1/enquete-banks/{id}', 'show');
-    Route::delete('v1/enquete-banks/{id}', 'destroy');
-
-});
-
-Route::controller(EnqueteController::class)->group(function () {
-    Route::get('v1/enquetes', 'index');
-    Route::get('v1/enquetes/{id}', 'show');
-});
-
-Route::controller(BankItemController::class)->group(function () {
-    Route::get('v1/bank-items', 'index');
-    Route::get('v1/bank-items/{id}', 'show');
-});
-
-
 Route::middleware('auth:api')->group(function () {
 
     Route::post('v1/auth/logout', [AuthController::class, 'logout']);
     Route::get('v1/auth/me', [AuthController::class, 'me']);
 
     Route::controller(EnqueteController::class)->group(function () {
+        Route::get('v1/enquetes', 'index');
+        Route::get('v1/enquetes/{id}', 'show');
         Route::post('v1/enquetes', 'store');
         Route::put('v1/enquetes/{id}', 'update');
         Route::delete('v1/enquetes/{id}', 'destroy');       
@@ -113,8 +69,45 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::controller(BankItemController::class)->group(function () {
+        Route::get('v1/bank-items', 'index');
+        Route::get('v1/bank-items/{id}', 'show');
         Route::post('v1/bank-items', 'store');      
         Route::put('v1/bank-items/{id}', 'update');      
         Route::delete('v1/bank-items/{id}', 'destroy');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::post('v1/users', 'store');
+        Route::get('v1/users', 'index');
+        Route::put('v1/users/{id}', 'update');
+        Route::get('v1/users/{id}', 'show');
+        Route::delete('v1/users/{id}', 'destroy');
+
+    });
+
+    Route::controller(BankItemItemController::class)->group(function () {
+        Route::post('v1/bank-item-items', 'store');
+        Route::get('v1/bank-item-items', 'index');
+        Route::put('v1/bank-item-items/{id}', 'update');
+        Route::get('v1/bank-item-items/{id}', 'show');
+        Route::delete('v1/bank-item-items/{id}', 'destroy');
+    });
+
+    Route::controller(ReponseController::class)->group(function () {
+        Route::post('v1/reponses', 'store');
+        Route::get('v1/reponses', 'index');
+        Route::put('v1/reponses/{id}', 'update');
+        Route::get('v1/reponses/{id}', 'show');
+        Route::delete('v1/reponses/{id}', 'destroy');
+
+    });
+
+    Route::controller(EnqueteBankController::class)->group(function () {
+        Route::post('v1/enquete-banks', 'store');
+        Route::get('v1/enquete-banks', 'index');
+        Route::put('v1/enquete-banks/{id}', 'update');
+        Route::get('v1/enquete-banks/{id}', 'show');
+        Route::delete('v1/enquete-banks/{id}', 'destroy');
+
     });
  });

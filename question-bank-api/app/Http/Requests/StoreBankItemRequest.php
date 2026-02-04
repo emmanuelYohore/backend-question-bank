@@ -23,7 +23,6 @@ class StoreBankItemRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'mode' => 'required|string|in:systematique,random',
             'archiver' => 'sometimes|boolean',
             
             

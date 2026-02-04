@@ -25,7 +25,6 @@ class UpdateModaliteReponseRequest extends FormRequest
              'format_reponse_id'  => 'sometimes|exists:format_reponses,id',
              'intitule' => 'sometimes|string|max:255',
              'valeur' => 'sometimes|integer',
-             'ordre' => 'sometimes|integer'
         ];
     }
 }

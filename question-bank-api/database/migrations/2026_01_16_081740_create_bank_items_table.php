@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
-            $table->string('mode')->default('systematique');
             $table->boolean('archiver')->default(false);
             $table->timestamps();
         });

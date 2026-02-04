@@ -25,7 +25,6 @@ class StoreModaliteReponseRequest extends FormRequest
              'format_reponse_id'  => 'required|exists:format_reponses,id',
              'intitule' => 'required|string|max:255',
              'valeur' => 'required|integer',
-             'ordre' => 'required|integer'
         ];
     }
 }
