@@ -22,7 +22,6 @@ class UpdateItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id'           => 'sometimes|exists:users,id',
             'format_reponse_id' => 'sometimes|exists:format_reponses,id',
             'question'          => 'sometimes|string|max:255',
             'obligatoire'       => 'sometimes|boolean',
