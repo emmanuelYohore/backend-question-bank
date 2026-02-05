@@ -11,7 +11,12 @@ class Item extends Model
 
     protected $table = 'items';
 
-    protected $fillable = ['format_reponse_id','question','obligatoire'];
+    protected $fillable = ['user_id', 'format_reponse_id','question','obligatoire'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function bankItems()
     {
@@ -26,5 +31,10 @@ class Item extends Model
     public function reponses()
     {
         return $this->hasMany(Reponse::class);
+    }
+
+    public function modaliteReponses()
+    {
+        return $this->hasMany(ModaliteReponse::class);
     }
 }

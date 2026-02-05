@@ -11,7 +11,7 @@ class Reponse extends Model
         'repondant_id',
         'item_id',
         'modalite_reponse_id',
-        'valeur_texte' 
+        'valeur'
     ];
 
     protected $casts = [

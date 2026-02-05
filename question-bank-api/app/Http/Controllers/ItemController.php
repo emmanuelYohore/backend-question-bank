@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBankItemRequest;
 use App\Http\Requests\StoreItemRequest;
-use App\Http\Requests\UpdateBankItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ItemController extends Controller
 {
@@ -26,7 +25,8 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         $data = $request->validated();
-        
+        $data['user_id'] = JWTAuth::parseToken()->authenticate()->id;
+
         $item = $this->itemRepository->create($data);
         return response()->json([
             "message"=> "item crée avec succès",

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->string('question')->nullable(false);
             $table->boolean('obligatoire')->default(true);

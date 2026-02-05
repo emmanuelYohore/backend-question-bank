@@ -23,7 +23,7 @@ class StoreItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bank_item_id'      => 'required|exists:bank_items,id',
+            'user_id'           => 'required|exists:users,id',
             'format_reponse_id' => 'required|exists:format_reponses,id',
             'question'          => 'required|string|max:255',
             'obligatoire'       => 'sometimes|boolean',

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('repondant_id')->constrained('repondants')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->foreignId('modalite_reponse_id')->constrained('modalite_reponses')->onDelete('cascade');
-            $table->string('valeur_texte')->nullable();
+            $table->foreignId('modalite_reponse_id')->nullable()->constrained('modalite_reponses')->onDelete('cascade');
+            $table->text('valeur')->nullable();
             $table->timestamps();
         });
     }
