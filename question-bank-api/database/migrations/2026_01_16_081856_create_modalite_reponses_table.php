@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-
             $table->string('intitule');
             $table->timestamps();
         });

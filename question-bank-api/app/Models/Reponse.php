@@ -11,12 +11,16 @@ class Reponse extends Model
         'repondant_id',
         'item_id',
         'modalite_reponse_id',
-        'valeur'
+        'valeur_texte',
+        'valeur_evn'
     ];
 
     protected $casts = [
-        'completed'=> 'boolean'
+        'completed'=> 'boolean',
+        'valeur_evn' => 'array'
     ];
+
+    
 
     public function repondant()
     {

@@ -16,13 +16,14 @@ return new class extends Migration
             $table->foreignId('repondant_id')->constrained('repondants')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->foreignId('modalite_reponse_id')->nullable()->constrained('modalite_reponses')->onDelete('cascade');
-            $table->text('valeur')->nullable();
+            $table->text('valeur_texte')->nullable();
+            $table->json('valeur_evn')->nullable();
+
             $table->timestamps();
         });
     }
     
     
-
     /**
      * Reverse the migrations.
      */

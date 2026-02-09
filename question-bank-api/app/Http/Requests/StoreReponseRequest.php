@@ -18,16 +18,10 @@ class StoreReponseRequest extends FormRequest
             'repondant_id' => 'required|exists:repondants,id',
             'item_id' => 'required|exists:items,id',
             'modalite_reponse_id' => 'nullable|exists:modalite_reponses,id',
-            'valeur' => 'nullable|string',
+            'valeur_texte' => 'nullable|string',
+            'valeur_evn' => 'nullable|array',
         ];
     }
 
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            if (empty($this->modalite_reponse_id) && empty($this->valeur)) {
-                $validator->errors()->add('reponse', 'Vous devez fournir soit une modalité de réponse, soit une valeur.');
-            }
-        });
-    }
+    
 }
