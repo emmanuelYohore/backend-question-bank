@@ -24,9 +24,9 @@ class StoreModaliteReponseRequest extends FormRequest
         return [
              'format_reponse_id'  => 'required|exists:format_reponses,id',
             'item_id' => 'required|exists:items,id',
-             'intitule' => 'sometimes|string|max:255',
-            'v1' => 'sometimes|string',
-             'v2' => 'sometimes|string',
+             'intitule' => 'nullable|string|max:255',
+            'v1' => 'nullable|string',
+             'v2' => 'nullable|string',
         ];
     }
 }

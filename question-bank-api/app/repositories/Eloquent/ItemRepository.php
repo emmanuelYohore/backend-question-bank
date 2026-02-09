@@ -20,6 +20,19 @@ class ItemRepository implements ItemRepositoryInterface
         return $itemId;
     }
 
+    public function getOneItemForUserId($userId, $ItemId)
+    {
+        return Item::where('user_id', $userId)
+                      ->where('id', $ItemId)
+                      ->firstOrFail();
+    }
+
+    public function getAllItemForUserId($id)
+    {
+        $ItemsUser = Item::all()->where('user_id', $id);
+        return $ItemsUser;
+    }
+
     public function create(array $data)
     {
         
