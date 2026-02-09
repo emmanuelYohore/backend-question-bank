@@ -17,7 +17,6 @@ class Reponse extends Model
 
     protected $casts = [
         'completed'=> 'boolean',
-        'valeur_evn' => 'array'
     ];
 
     

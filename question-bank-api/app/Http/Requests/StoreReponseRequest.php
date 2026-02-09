@@ -19,7 +19,7 @@ class StoreReponseRequest extends FormRequest
             'item_id' => 'required|exists:items,id',
             'modalite_reponse_id' => 'nullable|exists:modalite_reponses,id',
             'valeur_texte' => 'nullable|string',
-            'valeur_evn' => 'nullable|array',
+            'valeur_evn' => 'nullable|string',
         ];
     }
 

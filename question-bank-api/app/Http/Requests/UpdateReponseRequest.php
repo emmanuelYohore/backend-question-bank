@@ -25,7 +25,8 @@ class UpdateReponseRequest extends FormRequest
           'repondant_id'  => 'sometimes|exists:repondants,id',
              'item_id'  => 'sometimes|exists:items,id',
              'modalite_reponse_id'  => 'sometimes|exists:modalite_reponses,id',
-             'valeur'  => 'sometimes|string|max:255'
+             'valeur_texte'  => 'sometimes|string|max:255',
+             'valeur_evn'  => 'sometimes|string'
         ];
     }
 }
