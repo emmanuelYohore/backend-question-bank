@@ -40,7 +40,7 @@ class BankItemController extends Controller
          return response()->json($this->bankItemRepository->getById($id));
     }
 
-     public function getOneBankItemForUserId(string $userId, string $enqueteId)
+    public function getOneBankItemForUserId(string $userId, string $enqueteId)
     {
         return response()->json($this->bankItemRepository->getOneBankItemForUserId($userId, $enqueteId));
 

@@ -40,6 +40,16 @@ class ItemController extends Controller
          return response()->json($this->itemRepository->getById($id));
     }
 
+    public function getOneItemForUserId(string $userId, string $itemId)
+    {
+        return response()->json($this->itemRepository->getOneItemForUserId($userId, $itemId));
+
+    }
+
+    public function getAllItemForUserId(string $userId)
+    {
+        return response()->json($this->itemRepository->getAllItemForUserId($userId));
+    }
     
     public function update(UpdateItemRequest $request, string $id)
     {   
