@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttachItemsToBankRequest;
 use App\Http\Requests\StoreBankItemRequest;
 use App\Http\Requests\UpdateBankItemRequest;
+use App\Models\BankItem;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -34,6 +36,7 @@ class BankItemController extends Controller
             ], 201);
     }
 
+    
 
     public function show(string $id)
     {
@@ -60,6 +63,35 @@ class BankItemController extends Controller
         return response()->json([
             "message" => "bankItem Updated.",
             "bankItem" => $bankItem
+        ], 200);
+    }
+
+    public function attachItems(AttachItemsToBankRequest $request, string $userId, BankItem $bank)
+    {
+        if ($bank->user_id !== (int)$userId) {
+            return response()->json([
+                'error' => 'Vous n\'êtes pas autorisé à ajouter des items à cette bank'
+            ], 403);
+        }
+
+        $authenticatedUser = JWTAuth::parseToken()->authenticate();
+        if ($authenticatedUser->id !== (int)$userId) {
+            return response()->json([
+                'error' => 'Vous ne pouvez ajouter des items qu\'à vos propres banks'
+            ], 403);
+        }
+
+        $data = $request->validated();
+        
+        $bank->items()->syncWithoutDetaching($data['item_ids']);
+        
+        $attachedItems = $bank->items()->whereIn('items.id', $data['item_ids'])->get();
+        
+        return response()->json([
+            'message' => 'Items ajoutés à la bank avec succès',
+            'bank_id' => $bank->id,
+            'user_id' => $userId,
+            'attached_items' => $attachedItems
         ], 200);
     }
 

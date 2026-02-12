@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBankItemItemRequest extends FormRequest
+class AttachItemsToBankRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +21,9 @@ class StoreBankItemItemRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'bank_item_id' => 'required|exists:bank_items,id',
-            'item_ids' => 'required|array',
-            'item_ids.*' => 'exists:items,id',
-
-            
-        ];
+       return [
+        'item_ids' => 'required|array|min:1',
+        'item_ids.*' => 'exists:items,id',
+    ];
     }
 }
