@@ -2,6 +2,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\BankItem;
+use App\Models\User;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
 
 class BankItemRepository implements BankItemRepositoryInterface
@@ -24,13 +25,16 @@ class BankItemRepository implements BankItemRepositoryInterface
     {
         return BankItem::where('user_id', $userId)
                       ->where('id', $bankItemId)
+                      ->with('items')
                       ->firstOrFail();
     }
 
-    public function getAllBankItemForUserId($id)
+    public function getAllBankItemForUserId($userId)
     {
-        $bankItemsUser = BankItem::all()->where('user_id', $id);
-        return $bankItemsUser;
+        return User::findOrFail($userId)
+                ->bankItems()
+                ->with('items')
+                ->get();
     }
 
     public function create(array $data)

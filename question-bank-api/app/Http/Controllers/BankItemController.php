@@ -36,16 +36,14 @@ class BankItemController extends Controller
             ], 201);
     }
 
-    
-
     public function show(string $id)
     {
          return response()->json($this->bankItemRepository->getById($id));
     }
 
-    public function getOneBankItemForUserId(string $userId, string $enqueteId)
+    public function getOneBankItemForUserId(string $userId, string $bankItemId)
     {
-        return response()->json($this->bankItemRepository->getOneBankItemForUserId($userId, $enqueteId));
+        return response()->json($this->bankItemRepository->getOneBankItemForUserId($userId, $bankItemId));
 
     }
 
@@ -53,8 +51,7 @@ class BankItemController extends Controller
     {
         return response()->json($this->bankItemRepository->getAllBankItemForUserId($userId));
     }
-
-    
+       
     public function update(UpdateBankItemRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -66,8 +63,10 @@ class BankItemController extends Controller
         ], 200);
     }
 
-    public function attachItems(AttachItemsToBankRequest $request, string $userId, BankItem $bank)
+    public function attachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)
     {
+        $bank = BankItem::findOrFail($bankItemId);
+
         if ($bank->user_id !== (int)$userId) {
             return response()->json([
                 'error' => 'Vous n\'êtes pas autorisé à ajouter des items à cette bank'
