@@ -35,6 +35,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('v1/enquetes', 'index');
         Route::get('v1/enquetes/{id}', 'show');
         Route::post('v1/enquetes', 'store');
+        Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');      
+
         Route::put('v1/enquetes/{id}', 'update');
         Route::delete('v1/enquetes/{id}', 'destroy');       
         Route::get('v1/users/{userId}/enquetes/{enqueteId}', 'getOneEnqueteForUserId');

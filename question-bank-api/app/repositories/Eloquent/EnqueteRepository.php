@@ -1,7 +1,9 @@
 <?php 
 namespace App\Repositories\Eloquent;
 
+use App\Models\BankItem;
 use App\Models\Enquete;
+use App\Models\User;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
 
 
@@ -21,16 +23,32 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return $enqueteId;
     }
 
+    // public function getOneEnqueteForUserId($userId, $enqueteId)
+    // {
+    //     return Enquete::where('user_id', $userId)
+    //                   ->where('id', $enqueteId)
+    //                   ->firstOrFail();
+    // }
+
+    // public function getAllEnqueteForUserId($id){
+    //     $enquetesUser = Enquete::all()->where('user_id', $id);
+    //     return $enquetesUser;
+    // }
+
     public function getOneEnqueteForUserId($userId, $enqueteId)
     {
         return Enquete::where('user_id', $userId)
                       ->where('id', $enqueteId)
+                      ->with('bankItems')
                       ->firstOrFail();
     }
 
-    public function getAllEnqueteForUserId($id){
-        $enquetesUser = Enquete::all()->where('user_id', $id);
-        return $enquetesUser;
+    public function getAllEnqueteForUserId($userId)
+    {
+        return User::findOrFail($userId)
+                ->enquetes()
+                ->with('bankItems')
+                ->get();
     }
 
 
