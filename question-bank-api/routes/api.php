@@ -10,6 +10,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModaliteReponseController;
 use App\Http\Controllers\RepondantController;
 use App\Http\Controllers\ReponseController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +90,17 @@ Route::middleware('auth:api')->group(function () {
         Route::put('v1/users/{id}', 'update');
         Route::get('v1/users/{id}', 'show');
         Route::delete('v1/users/{id}', 'destroy');
+
+    });
+
+    Route::controller(RoleController::class)->group(function () {
+        Route::post('v1/roles', 'store');
+        Route::get('v1/roles', 'index');
+        Route::put('v1/roles/{id}', 'update');
+        Route::get('v1/roles/{id}', 'show');
+        Route::delete('v1/roles/{id}', 'destroy');
+        Route::post('v1/users/attach-role', 'addRoleToUser');
+        Route::post('v1/users/remove-role', 'removeRoleFromUser');
 
     });
 

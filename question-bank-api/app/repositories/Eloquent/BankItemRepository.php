@@ -26,7 +26,8 @@ class BankItemRepository implements BankItemRepositoryInterface
         return BankItem::where('user_id', $userId)
                       ->where('id', $bankItemId)
                       ->with('items')
-                      ->firstOrFail();
+                      ->get();
+                      
     }
 
     public function getAllBankItemForUserId($userId)

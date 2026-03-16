@@ -12,6 +12,7 @@ use App\Repositories\Eloquent\RepondantRepository;
 use App\Repositories\Eloquent\ReponseRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\BankItemItemRepository;
+use App\Repositories\Eloquent\RoleRepository;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
 use App\Repositories\Interfaces\EnqueteBankRepositoryInterface;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
@@ -22,7 +23,7 @@ use App\Repositories\Interfaces\RepondantRepositoryInterface;
 use App\Repositories\Interfaces\ReponseRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Interfaces\BankItemItemRepositoryInterface;
-
+use App\Repositories\Interfaces\RoleRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -40,6 +41,7 @@ class RepositoryServiceProvider extends ServiceProvider
       $this->app->bind(RepondantRepositoryInterface::class, RepondantRepository::class);
       $this->app->bind(EnqueteBankRepositoryInterface::class, EnqueteBankRepository::class);
       $this->app->bind(BankItemItemRepositoryInterface::class, BankItemItemRepository::class);
+      $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
 
     }
 

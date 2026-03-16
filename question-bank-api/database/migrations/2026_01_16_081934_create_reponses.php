@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('modalite_reponse_id')->nullable()->constrained('modalite_reponses')->onDelete('cascade');
             $table->string('valeur_texte')->nullable();
             $table->string('valeur_evn')->nullable();
-
             $table->timestamps();
         });
     }
