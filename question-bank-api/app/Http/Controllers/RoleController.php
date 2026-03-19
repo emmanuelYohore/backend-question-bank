@@ -80,7 +80,7 @@ class RoleController extends Controller
         ]);
     }
 
-    public function removeRoleFromUser(AttachRoleToUserRequest $request)
+    public function detachRoleFromUser(AttachRoleToUserRequest $request)
     {
         $request->validate();
 

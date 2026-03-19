@@ -86,6 +86,35 @@ class EnqueteController extends Controller
         ], 200);
     }
 
+    public function detachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
+    {
+        $enquete = Enquete::findOrFail($enqueteId);
+
+        if ($enquete->user_id !== (int)$userId) {
+            return response()->json([
+                'error' => 'Vous n\'êtes pas autorisé à retirer des banques de cette enquête'
+            ], 403);
+        }
+
+        $authenticatedUser = JWTAuth::parseToken()->authenticate();
+        if ($authenticatedUser->id !== (int)$userId) {
+            return response()->json([
+                'error' => 'Vous ne pouvez retirer des banques d\'items qu\'à vos propres enquêtes'
+            ], 403);
+        }
+
+        $data = $request->validated();
+        
+        $enquete->bankItems()->detach($data['bank_item_ids']);
+        
+        return response()->json([
+            'message' => 'Banque d\'items retirés de l\'enquête avec succès',
+            'enquete_id' => $enquete->id,
+            'user_id' => $userId,
+            'detached_bank_item_ids' => $data['bank_item_ids']
+        ], 200);
+    }
+
     
 
     

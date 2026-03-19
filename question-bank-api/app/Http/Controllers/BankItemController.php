@@ -94,6 +94,34 @@ class BankItemController extends Controller
         ], 200);
     }
 
+    public function detachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)
+    {
+        $bank = BankItem::findOrFail($bankItemId);
+
+        if ($bank->user_id !== (int)$userId) {
+            return response()->json([
+                'error' => 'Vous n\'êtes pas autorisé à retirer des items de cette bank'
+            ], 403);
+        }
+
+        $authenticatedUser = JWTAuth::parseToken()->authenticate();
+        if ($authenticatedUser->id !== (int)$userId) {
+            return response()->json([
+                'error' => 'Vous ne pouvez retirer des items qu\'à vos propres banks'
+            ], 403);
+        }
+
+        $data = $request->validated();
+        
+        $bank->items()->detach($data['item_ids']);
+        
+        return response()->json([
+            'message' => 'Items retirés de la bank avec succès',
+            'bank_id' => $bank->id,
+            'user_id' => $userId,
+            'detached_item_ids' => $data['item_ids']
+        ], 200);
+    }
    
     public function destroy(string $id)
     {

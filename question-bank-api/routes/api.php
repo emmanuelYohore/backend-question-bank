@@ -36,7 +36,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('v1/enquetes', 'index');
         Route::get('v1/enquetes/{id}', 'show');
         Route::post('v1/enquetes', 'store');
-        Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');      
+        Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');
+        Route::delete('v1/users/{userId}/enquetes/{enqueteId}/bank-items/detach', 'detachBankItems');      
 
         Route::put('v1/enquetes/{id}', 'update');
         Route::delete('v1/enquetes/{id}', 'destroy');       
@@ -82,6 +83,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('v1/users/{userId}/bank-items/{bankItemId}/items', 'attachItems');      
         Route::put('v1/bank-items/{id}', 'update');      
         Route::delete('v1/bank-items/{id}', 'destroy');
+        Route::delete('v1/users/{userId}/bank-items/{bankItemId}/items/detach', 'detachItems');
     });
 
     Route::controller(UserController::class)->group(function () {
@@ -100,7 +102,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('v1/roles/{id}', 'show');
         Route::delete('v1/roles/{id}', 'destroy');
         Route::post('v1/users/attach-role', 'addRoleToUser');
-        Route::post('v1/users/remove-role', 'removeRoleFromUser');
+        Route::delete('v1/users/detach-role', 'detachRoleFromUser');
 
     });
 
