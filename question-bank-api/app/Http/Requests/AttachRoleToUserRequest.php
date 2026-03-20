@@ -23,7 +23,8 @@ class AttachRoleToUserRequest extends FormRequest
     {
        return [
         'user_id' => 'required|integer|exists:users,id',
-        'role_id' => 'required|integer|exists:roles,id',
+        'role_ids' => 'required|array|min:1',
+        'role_ids.*' => 'integer|exists:roles,id',
     ];
     }
 }

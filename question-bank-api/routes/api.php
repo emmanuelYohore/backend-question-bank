@@ -36,11 +36,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('v1/enquetes', 'index');
         Route::get('v1/enquetes/{id}', 'show');
         Route::post('v1/enquetes', 'store');
-        Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');
-        Route::delete('v1/users/{userId}/enquetes/{enqueteId}/bank-items/detach', 'detachBankItems');      
-
         Route::put('v1/enquetes/{id}', 'update');
-        Route::delete('v1/enquetes/{id}', 'destroy');       
+        Route::delete('v1/enquetes/{id}', 'destroy');
+
+        Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');
+        Route::delete('v1/users/{userId}/enquetes/{enqueteId}/bank-items/detach', 'detachBankItems');                     
         Route::get('v1/users/{userId}/enquetes/{enqueteId}', 'getOneEnqueteForUserId');
         Route::get('v1/users/{userId}/enquetes', 'getAllEnqueteForUserId');
     });
@@ -57,11 +57,13 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(ItemController::class)->group(function () {
         Route::post('v1/items', 'store');
         Route::get('v1/items', 'index');
-        Route::get('v1/users/{userId}/items/{itemId}', 'getOneItemForUserId');
-        Route::get('v1/users/{userId}/items', 'getAllItemForUserId');
         Route::put('v1/items/{id}', 'update');
         Route::get('v1/items/{id}', 'show');
         Route::delete('v1/items/{id}', 'destroy');
+
+        Route::get('v1/users/{userId}/items/{itemId}', 'getOneItemForUserId');
+        Route::get('v1/users/{userId}/items', 'getAllItemForUserId');
+        
 
     });
 
@@ -77,16 +79,17 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(BankItemController::class)->group(function () {
         Route::get('v1/bank-items', 'index');
         Route::get('v1/bank-items/{id}', 'show');
-        Route::get('v1/users/{userId}/bank-items/{bankItemId}', 'getOneBankItemForUserId');
-        Route::get('v1/users/{userId}/bank-items', 'getAllBankItemForUserId');
-        Route::post('v1/bank-items', 'store');
-        Route::post('v1/users/{userId}/bank-items/{bankItemId}/items', 'attachItems');      
         Route::put('v1/bank-items/{id}', 'update');      
         Route::delete('v1/bank-items/{id}', 'destroy');
+        Route::post('v1/bank-items', 'store');
+        
+        Route::get('v1/users/{userId}/bank-items/{bankItemId}', 'getOneBankItemForUserId');
+        Route::get('v1/users/{userId}/bank-items', 'getAllBankItemForUserId');
+        Route::post('v1/users/{userId}/bank-items/{bankItemId}/items', 'attachItems');        
         Route::delete('v1/users/{userId}/bank-items/{bankItemId}/items/detach', 'detachItems');
     });
 
-    Route::controller(UserController::class)->group(function () {
+    Route::middleware('role:admin,user')->controller(UserController::class)->group(function () {
         Route::post('v1/users', 'store');
         Route::get('v1/users', 'index');
         Route::put('v1/users/{id}', 'update');
@@ -95,12 +98,13 @@ Route::middleware('auth:api')->group(function () {
 
     });
 
-    Route::controller(RoleController::class)->group(function () {
+    Route::middleware('role:admin,user')->controller(RoleController::class)->group(function () {
         Route::post('v1/roles', 'store');
         Route::get('v1/roles', 'index');
         Route::put('v1/roles/{id}', 'update');
         Route::get('v1/roles/{id}', 'show');
         Route::delete('v1/roles/{id}', 'destroy');
+        
         Route::post('v1/users/attach-role', 'addRoleToUser');
         Route::delete('v1/users/detach-role', 'detachRoleFromUser');
 

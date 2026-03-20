@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleType;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Models\Role;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use UserException;
 
 class UserController extends Controller
 {
@@ -19,24 +23,53 @@ class UserController extends Controller
 
     public function index()
     {
-        return response()->json($this->userRepository->getAll());
+        try {
+            return response()->json($this->userRepository->getAll());
+        } catch (UserException $e) {
+            return response()->json([
+                "message" => $e->notUsersMessage()
+            ]);
+                 
+        }
     }
 
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
         
-        $user = $this->userRepository->create($data);
+        try {
+            $user = $this->userRepository->create($data);
+
+            $defaultRole = Role::firstOrCreate([
+                'name' => RoleType::USER->value,
+            ]);
+
+            $user->roles()->syncWithoutDetaching([$defaultRole->id]);
+
+            $token = JWTAuth::fromUser($user);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => 'Failed to create user, please try again'
+                ], 500);
+        }
+        
         return response()->json([
-            "message"=> "user crée avec succès",
-            "user"=> $user
-            ], 201);
+            'message' => 'Utilisateur créé avec succès',
+            'user' => $user,
+            'access_token' => $token
+        ], 201);           
     }
 
 
     public function show(string $id)
     {
-         return response()->json($this->userRepository->getById($id));
+        try {
+            return response()->json($this->userRepository->getById($id));
+        } catch (UserException $e) {
+            return response()->json([
+                "message" => $e->notUserIdMessage()
+            ]);
+        }
     }
 
     
@@ -47,20 +80,31 @@ class UserController extends Controller
             $data['password'] = Hash::make($data['password']);
         }
         
-        $user = $this->userRepository->update($id, $data);
-        
-        return response()->json([
-            "message" => "User Updated.",
-            "user" => $user
-        ], 200);
+        try {
+            $user = $this->userRepository->update($id, $data);
+            return response()->json([
+                "message" => "User Updated.",
+                "user" => $user
+            ], 200);
+        } catch (UserException $e) {
+            return response()->json([
+                "message" => $e->notUpdateUserMessage()
+            ]);
+        }
     }
 
    
     public function destroy(string $id)
     {
-        $this->userRepository->delete($id);
-        return response()->json([
-            'user deleted' 
+        try {
+            $this->userRepository->delete($id);
+            return response()->json([
+                'message' => 'User deleted'
             ]);
+        } catch (UserException $e) {
+            return response()->json([
+                "message" => $e->notDeleteUserMessage()
+            ]);
+        }
     }
-}
+}   

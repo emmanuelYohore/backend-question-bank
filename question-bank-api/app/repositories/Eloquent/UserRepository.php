@@ -1,8 +1,11 @@
 <?php 
 namespace App\Repositories\Eloquent;
 
+use App\Enums\RoleType;
+use App\Models\Role;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
@@ -23,8 +26,18 @@ class UserRepository implements UserRepositoryInterface
 
     public function create(array $data)
     {
-        $data['password'] = Hash::make($data['password']);
-        return User::create($data);
+        return DB::transaction(function () use ($data) {
+            $roleName = $data['role'] ?? RoleType::USER->value;
+            unset($data['role']);
+
+            $data['password'] = Hash::make($data['password']);
+            $user = User::create($data);
+
+            $role = Role::firstOrCreate(['name' => $roleName]);
+            $user->roles()->syncWithoutDetaching([$role->id]);
+
+            return $user->load('roles');
+        });
     }
 
     public function update($id, array $data)

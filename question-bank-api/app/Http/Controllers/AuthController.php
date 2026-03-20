@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleType;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Models\Role;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -20,6 +22,13 @@ class AuthController extends Controller
         
         try {
             $user = $this->userRepository->create($data);
+
+            $defaultRole = Role::firstOrCreate([
+                'name' => RoleType::USER->value,
+            ]);
+
+            $user->roles()->syncWithoutDetaching([$defaultRole->id]);
+
             $token = JWTAuth::fromUser($user);
         } catch (\Throwable $e) {
             return response()->json([

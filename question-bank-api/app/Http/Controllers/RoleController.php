@@ -68,28 +68,34 @@ class RoleController extends Controller
 
     public function addRoleToUser(AttachRoleToUserRequest $request)
     {
-        $request->validate();
+        $data = $request->validated();
 
-        $user = User::findOrFail($request->user_id);
+        $user = User::findOrFail($data['user_id']);
 
-        $user->roles()->syncWithoutDetaching([$request->role_id]);
+        $user->roles()->syncWithoutDetaching($data['role_ids']);
+
+        $attachedRoles = $user->roles()->whereIn('roles.id', $data['role_ids'])->get();
 
         return response()->json([
-            'message' => 'Rôle ajouté avec succès.',
+            'message' => 'Rôles ajoutés avec succès.',
+            'user_id' => $user->id,
+            'attached_roles' => $attachedRoles,
             'user' => $user->load('roles')
         ]);
     }
 
     public function detachRoleFromUser(AttachRoleToUserRequest $request)
     {
-        $request->validate();
+        $data = $request->validated();
 
-        $user = User::findOrFail($request->user_id);
+        $user = User::findOrFail($data['user_id']);
 
-        $user->roles()->detach($request->role_id);
+        $user->roles()->detach($data['role_ids']);
 
         return response()->json([
-            'message' => 'Rôle supprimé avec succès.',
+            'message' => 'Rôles supprimés avec succès.',
+            'user_id' => $user->id,
+            'detached_role_ids' => $data['role_ids'],
             'user' => $user->load('roles')
         ]);
     }
