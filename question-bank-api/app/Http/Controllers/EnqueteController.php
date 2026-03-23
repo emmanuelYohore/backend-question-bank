@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEnqueteRequest;
 use App\Http\Requests\UpdateEnqueteRequest;
 use App\Models\Enquete;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 class EnqueteController extends Controller
@@ -50,9 +51,15 @@ class EnqueteController extends Controller
     }
 
 
-    public function getAllEnqueteForUserId(string $userId)
+    public function getAllEnqueteForUserId(string $userId, Request $request)
     {
-        return response()->json($this->enqueteRepository->getAllEnqueteForUserId($userId));
+        $query = Enquete::where('user_id', $userId);
+        
+        if ($search = $request->input('search')) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+        
+        return response()->json($query->get());
     }
 
     public function attachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)

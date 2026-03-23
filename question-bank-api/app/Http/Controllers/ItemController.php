@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use App\Models\Item;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
+use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ItemController extends Controller
@@ -46,9 +48,15 @@ class ItemController extends Controller
 
     }
 
-    public function getAllItemForUserId(string $userId)
+    public function getAllItemForUserId(string $userId, Request $request)
     {
-        return response()->json($this->itemRepository->getAllItemForUserId($userId));
+        $query = Item::where('user_id', $userId);
+        
+        if ($search = $request->input('search')) {
+            $query->where('question', 'like', "%{$search}%");
+        }
+        
+        return response()->json($query->get());;
     }
     
     public function update(UpdateItemRequest $request, string $id)

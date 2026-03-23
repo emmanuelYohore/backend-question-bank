@@ -7,6 +7,7 @@ use App\Http\Requests\StoreBankItemRequest;
 use App\Http\Requests\UpdateBankItemRequest;
 use App\Models\BankItem;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
+use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BankItemController extends Controller
@@ -19,9 +20,14 @@ class BankItemController extends Controller
          $this->bankItemRepository = $bankItemRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->bankItemRepository->getAll());
+        $query = BankItem::query();
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        return response()->json($query->get());
+        
     }
 
     public function store(StoreBankItemRequest $request)
@@ -47,9 +53,15 @@ class BankItemController extends Controller
 
     }
 
-    public function getAllBankItemForUserId(string $userId)
+    public function getAllBankItemForUserId(string $userId, Request $request)
     {
-        return response()->json($this->bankItemRepository->getAllBankItemForUserId($userId));
+        $query = BankItem::where('user_id', $userId);
+        
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        
+        return response()->json($query->get());
     }
        
     public function update(UpdateBankItemRequest $request, string $id)

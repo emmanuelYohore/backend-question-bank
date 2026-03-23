@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AttachRoleToUserRequest;
 use App\Http\Requests\StoreRoleRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\User;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
-use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Request;
+
 
 class RoleController extends Controller
 {

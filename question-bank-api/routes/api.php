@@ -89,7 +89,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('v1/users/{userId}/bank-items/{bankItemId}/items/detach', 'detachItems');
     });
 
-    Route::middleware('role:admin,user')->controller(UserController::class)->group(function () {
+    Route::middleware('role:admin')->controller(UserController::class)->group(function () {
         Route::post('v1/users', 'store');
         Route::get('v1/users', 'index');
         Route::put('v1/users/{id}', 'update');
@@ -98,7 +98,7 @@ Route::middleware('auth:api')->group(function () {
 
     });
 
-    Route::middleware('role:admin,user')->controller(RoleController::class)->group(function () {
+    Route::middleware('role:admin')->controller(RoleController::class)->group(function () {
         Route::post('v1/roles', 'store');
         Route::get('v1/roles', 'index');
         Route::put('v1/roles/{id}', 'update');
