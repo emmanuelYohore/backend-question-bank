@@ -33,9 +33,9 @@ class StoreEnqueteRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_message' => 'required|string',
-            'end_message' => 'required|string',
+            'description' => 'required|string|max:800',
+            'start_message' => 'required|string|max:800',
+            'end_message' => 'required|string|max:800',
             'archiver' => 'sometimes|boolean',
         ];
     }

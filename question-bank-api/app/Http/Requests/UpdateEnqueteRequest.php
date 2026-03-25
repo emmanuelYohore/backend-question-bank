@@ -45,9 +45,9 @@ class UpdateEnqueteRequest extends FormRequest
     {
         return [
             'title' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'start_message' => 'sometimes|string',
-            'end_message' => 'sometimes|string',
+            'description' => 'sometimes|string|max:800',
+            'start_message' => 'sometimes|string|max:800',
+            'end_message' => 'sometimes|string|max:800',
             'archiver' => 'sometimes|boolean',
             'url_enquete' => 'sometimes|string|url|max:255'
         ];
