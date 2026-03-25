@@ -2,10 +2,20 @@
 
 namespace App\Http\Requests;
 
+use App\Support\HtmlSanitizer;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEnqueteRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'description' => HtmlSanitizer::sanitizeEnqueteHtml((string) $this->input('description', '')),
+            'start_message' => HtmlSanitizer::sanitizeEnqueteHtml((string) $this->input('start_message', '')),
+            'end_message' => HtmlSanitizer::sanitizeEnqueteHtml((string) $this->input('end_message', '')),
+        ]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
