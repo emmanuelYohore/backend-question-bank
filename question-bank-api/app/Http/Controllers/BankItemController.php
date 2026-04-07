@@ -7,6 +7,7 @@ use App\Http\Requests\StoreBankItemRequest;
 use App\Http\Requests\UpdateBankItemRequest;
 use App\Models\BankItem;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
+use BankItemException;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -44,7 +45,13 @@ class BankItemController extends Controller
 
     public function show(string $id)
     {
-         return response()->json($this->bankItemRepository->getById($id));
+        try {
+            return response()->json($this->bankItemRepository->getById($id));
+        } catch (BankItemException $e ) {
+            return response()->json([
+                'error' => $e->notBankItemIdMessage()
+            ], 404);
+        }
     }
 
     public function getOneBankItemForUserId(string $userId, string $bankItemId)
@@ -93,6 +100,17 @@ class BankItemController extends Controller
         }
 
         $data = $request->validated();
+
+        //Si l'item est archivée, on ne peut pas l'ajouter à la banque
+
+            if (BankItem::whereHas('items', function ($query) use ($data) {
+                $query->whereIn('items.id', $data['item_ids']);
+                $query->where('items.archived', true);
+            })->exists()) {
+                return response()->json([
+                    'error' => 'Vous ne pouvez pas ajouter d\'items archivés à cette bank'
+                ], 400);
+            }
         
         $bank->items()->syncWithoutDetaching($data['item_ids']);
         

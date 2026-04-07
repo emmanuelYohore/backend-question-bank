@@ -10,7 +10,6 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ModaliteReponseController;
 use App\Http\Controllers\RepondantController;
 use App\Http\Controllers\ReponseController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -98,18 +97,7 @@ Route::middleware('auth:api')->group(function () {
 
     });
 
-    Route::middleware('role:admin')->controller(RoleController::class)->group(function () {
-        Route::post('v1/roles', 'store');
-        Route::get('v1/roles', 'index');
-        Route::put('v1/roles/{id}', 'update');
-        Route::get('v1/roles/{id}', 'show');
-        Route::delete('v1/roles/{id}', 'destroy');
-        
-        Route::post('v1/users/attach-role', 'addRoleToUser');
-        Route::delete('v1/users/detach-role', 'detachRoleFromUser');
-
-    });
-
+   
     Route::controller(BankItemItemController::class)->group(function () {
         Route::post('v1/bank-item-items', 'store');
         Route::get('v1/bank-item-items', 'index');

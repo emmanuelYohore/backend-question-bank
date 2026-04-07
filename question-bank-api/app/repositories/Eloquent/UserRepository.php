@@ -26,18 +26,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function create(array $data)
     {
-        return DB::transaction(function () use ($data) {
-            $roleName = $data['role'] ?? RoleType::USER->value;
-            unset($data['role']);
-
-            $data['password'] = Hash::make($data['password']);
-            $user = User::create($data);
-
-            $role = Role::firstOrCreate(['name' => $roleName]);
-            $user->roles()->syncWithoutDetaching([$role->id]);
-
-            return $user->load('roles');
-        });
+        $data['password'] = Hash::make($data['password']);
+        $user = User::create($data);
+        return $user;
     }
 
     public function update($id, array $data)

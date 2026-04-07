@@ -19,16 +19,11 @@ class AuthController extends Controller
     public function register(StoreUserRequest $request)
     {
         $data = $request->validated();
-        
+        $data['role'] = $data['role'] ?? 'user';
+    
         try {
+
             $user = $this->userRepository->create($data);
-
-            $defaultRole = Role::firstOrCreate([
-                'name' => RoleType::USER->value,
-            ]);
-
-            $user->roles()->syncWithoutDetaching([$defaultRole->id]);
-
             $token = JWTAuth::fromUser($user);
         } catch (\Throwable $e) {
             return response()->json([

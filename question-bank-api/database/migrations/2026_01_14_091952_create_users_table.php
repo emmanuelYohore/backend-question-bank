@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->string('password');
+            $table->enum('role', RoleType::cases())->default('user');
             $table->timestamps();
         });
     }

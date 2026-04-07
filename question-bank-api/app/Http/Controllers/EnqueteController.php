@@ -80,6 +80,16 @@ class EnqueteController extends Controller
         }
 
         $data = $request->validated();
+
+        //si la banque est archivée, on ne peut pas l'ajouter à l'enquête
+        if (Enquete::whereHas('bankItems', function ($query) use ($data) {
+            $query->whereIn('bank_items.id', $data['bank_item_ids']);
+            $query->where('bank_items.archived', true);
+        })->exists()) {
+            return response()->json([
+                'error' => 'Vous ne pouvez pas ajouter de banques archivées à cette enquête'
+            ], 400);
+        }
         
         $enquete->bankItems()->syncWithoutDetaching($data['bank_item_ids']);
         

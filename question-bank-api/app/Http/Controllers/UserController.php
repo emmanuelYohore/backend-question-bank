@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RoleType;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
-use App\Models\Role;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -28,7 +26,7 @@ class UserController extends Controller
         } catch (UserException $e) {
             return response()->json([
                 "message" => $e->notUsersMessage()
-            ]);
+            ], 404);
                  
         }
     }
@@ -36,20 +34,13 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        
+        $data['role'] = $data['role'] ?? 'user';
         try {
             $user = $this->userRepository->create($data);
-
-            $defaultRole = Role::firstOrCreate([
-                'name' => RoleType::USER->value,
-            ]);
-
-            $user->roles()->syncWithoutDetaching([$defaultRole->id]);
-
             $token = JWTAuth::fromUser($user);
-        } catch (\Throwable $e) {
+        } catch (UserException $e) {
             return response()->json([
-                'error' => 'Failed to create user, please try again'
+                'message' => $e->notCreateUserMessage()
                 ], 500);
         }
         
@@ -68,7 +59,7 @@ class UserController extends Controller
         } catch (UserException $e) {
             return response()->json([
                 "message" => $e->notUserIdMessage()
-            ]);
+            ], 404);
         }
     }
 
