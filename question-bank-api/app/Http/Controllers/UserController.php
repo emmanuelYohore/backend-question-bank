@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use UserException;
@@ -19,9 +21,14 @@ class UserController extends Controller
          $this->userRepository = $userRepository;
     }
 
-    public function index()
+    //recupère tous les users et recherche par email
+    public function index(Request $request)
     {
         try {
+            $query =User::query();
+            if ($search = $request->input('search')) {
+            $query->where('email', 'like', "%{$search}%");
+        }
             return response()->json($this->userRepository->getAll());
         } catch (UserException $e) {
             return response()->json([
@@ -31,6 +38,7 @@ class UserController extends Controller
         }
     }
 
+    //crée un user
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
@@ -51,7 +59,7 @@ class UserController extends Controller
         ], 201);           
     }
 
-
+    //recupère un user en fonction de son id
     public function show(string $id)
     {
         try {
@@ -63,7 +71,7 @@ class UserController extends Controller
         }
     }
 
-    
+    //met à jour un user en fonction de son id
     public function update(UpdateUserRequest $request, string $id)
     {   
         $data = $request->validated();
@@ -84,7 +92,7 @@ class UserController extends Controller
         }
     }
 
-   
+    //supprime un user en fonction de son id
     public function destroy(string $id)
     {
         try {

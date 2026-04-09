@@ -19,11 +19,17 @@ class ItemController extends Controller
          $this->itemRepository = $itemRepository;
     }
 
-    public function index()
+    //recupère tous les items et recherche par question
+    public function index(Request $request)
     {
-        return response()->json($this->itemRepository->getAll());
+        $query = Item::query()->with('formatReponse', 'modaliteReponses');
+        if ($search = $request->input('search')) {
+            $query->where('question', 'like', "%{$search}%");
+        }
+        return response()->json($query->get());
     }
 
+    //crée un item
     public function store(StoreItemRequest $request)
     {
         $data = $request->validated();
@@ -36,29 +42,32 @@ class ItemController extends Controller
             ], 201);
     }
 
-
+    //recupère un item en fonction de son id
     public function show(string $id)
     {
          return response()->json($this->itemRepository->getById($id));
     }
 
+    //recupère un item avec son format de réponse et ses modalités associés pour un userId donné
     public function getOneItemForUserId(string $userId, string $itemId)
     {
         return response()->json($this->itemRepository->getOneItemForUserId($userId, $itemId));
 
     }
 
+    //recupère tous les items avec leur format de réponse et leurs modalités associés pour un userId donné
     public function getAllItemForUserId(string $userId, Request $request)
     {
-        $query = Item::where('user_id', $userId);
+        $query = Item::where('user_id', $userId)->with('formatReponse', 'modaliteReponses');
         
         if ($search = $request->input('search')) {
             $query->where('question', 'like', "%{$search}%");
         }
         
-        return response()->json($query->get());;
+        return response()->json($query->get());
     }
     
+    //met à jour un item en fonction de son id
     public function update(UpdateItemRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -70,7 +79,7 @@ class ItemController extends Controller
         ], 200);
     }
 
-   
+   //supprime un item en fonction de son id
     public function destroy(string $id)
     {
         try {

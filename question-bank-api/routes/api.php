@@ -62,6 +62,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('v1/users/{userId}/items/{itemId}', 'getOneItemForUserId');
         Route::get('v1/users/{userId}/items', 'getAllItemForUserId');
+
         
 
     });

@@ -11,7 +11,7 @@ class Item extends Model
 
     protected $table = 'items';
 
-    protected $fillable = ['user_id', 'format_reponse_id','question','obligatoire'];
+    protected $fillable = ['user_id', 'format_reponse_id','question','obligatoire', 'archived'];
 
     public function user()
     {

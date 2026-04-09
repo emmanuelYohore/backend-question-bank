@@ -24,7 +24,7 @@ class UpdateBankItemRequest extends FormRequest
         return [
             'name' => 'sometimes|string|max:255',
             'mode' => 'sometimes|string|in:systematique,random',
-            'archiver' => 'sometimes|boolean',
+            'archived' => 'sometimes|boolean',
             
         ];
     }

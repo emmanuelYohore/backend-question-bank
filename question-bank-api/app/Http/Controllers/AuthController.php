@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RoleType;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StoreUserRequest;
-use App\Models\Role;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -19,7 +17,7 @@ class AuthController extends Controller
     public function register(StoreUserRequest $request)
     {
         $data = $request->validated();
-        $data['role'] = $data['role'] ?? 'user';
+        //$data['role'] = $data['role'] ?? 'user';
     
         try {
 

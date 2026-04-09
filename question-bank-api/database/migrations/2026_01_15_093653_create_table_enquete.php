@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('start_message');
             $table->string('end_message');
-            $table->boolean('archiver')->default(false);
+            $table->boolean('archived')->default(false);
             $table->string('url_enquete');
             $table->timestamps();
         });

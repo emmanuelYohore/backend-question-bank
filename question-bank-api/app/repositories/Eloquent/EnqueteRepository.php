@@ -34,20 +34,35 @@ class EnqueteRepository implements EnqueteRepositoryInterface
     //     $enquetesUser = Enquete::all()->where('user_id', $id);
     //     return $enquetesUser;
     // }
+  
 
+    //recupère une enquête avec ses bank items associés pour un userId 
     public function getOneEnqueteForUserId($userId, $enqueteId)
     {
         return Enquete::where('user_id', $userId)
                       ->where('id', $enqueteId)
-                      ->with('bankItems')
+                      ->with(['bankItems' => function ($query) {
+                          $query->with(['items' => function ($q) {
+                              $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                                  $mq->with('formatReponse');
+                              }]);
+                          }]);
+                      }])
                       ->firstOrFail();
     }
 
+    //recupère toutes les enquêtes avec leurs bank items associés pour un userId 
     public function getAllEnqueteForUserId($userId)
     {
         return User::findOrFail($userId)
                 ->enquetes()
-                ->with('bankItems')
+                ->with(['bankItems' => function ($query) {
+                    $query->with(['items' => function ($q) {
+                        $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                            $mq->with('formatReponse');
+                        }]);
+                    }]);
+                }])
                 ->get();
     }
 

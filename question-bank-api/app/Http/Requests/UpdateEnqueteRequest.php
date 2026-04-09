@@ -48,7 +48,7 @@ class UpdateEnqueteRequest extends FormRequest
             'description' => 'sometimes|string|max:800',
             'start_message' => 'sometimes|string|max:800',
             'end_message' => 'sometimes|string|max:800',
-            'archiver' => 'sometimes|boolean',
+            'archived' => 'sometimes|boolean',
             'url_enquete' => 'sometimes|string|url|max:255'
         ];
     }

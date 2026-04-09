@@ -36,7 +36,7 @@ class StoreEnqueteRequest extends FormRequest
             'description' => 'required|string|max:800',
             'start_message' => 'required|string|max:800',
             'end_message' => 'required|string|max:800',
-            'archiver' => 'sometimes|boolean',
+            'archived' => 'sometimes|boolean',
         ];
     }
 }

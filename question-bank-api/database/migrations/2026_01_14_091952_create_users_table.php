@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', RoleType::cases())->default('user');
+            $table->enum('role', array_column(RoleType::cases(), 'value'))->default(RoleType::USER->value);
             $table->timestamps();
         });
     }

@@ -10,10 +10,10 @@ class BankItem extends Model
     use HasFactory;
 
     protected $table = 'bank_items';
-    protected $fillable = ['user_id','name','archiver'];
+    protected $fillable = ['user_id','name','archived'];
 
     protected $casts = [
-        'archiver' => 'boolean',
+        'archived' => 'boolean',
     ];
 
     public function user()

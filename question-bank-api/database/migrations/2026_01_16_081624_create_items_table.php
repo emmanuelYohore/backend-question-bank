@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->string('question')->nullable(false);
             $table->boolean('obligatoire')->default(true);
+            $table->boolean('archived')->default(false);
+
+
             $table->timestamps();
         });
     }

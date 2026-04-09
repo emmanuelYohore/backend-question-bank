@@ -17,12 +17,12 @@ class Enquete extends Model
         'description',
         'start_message',
         'end_message',
-        'archiver',
+        'archived',
         'url_enquete'
     ];
 
     protected $casts = [
-        'archiver' => 'boolean',
+        'archived' => 'boolean',
     ];
 
     public function user()

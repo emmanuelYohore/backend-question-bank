@@ -21,21 +21,27 @@ class BankItemRepository implements BankItemRepositoryInterface
         return $bankItemId;
     }
 
+    //recupère un bank item avec ses items associés pour un userId donné
     public function getOneBankItemForUserId($userId, $bankItemId)
     {
         return BankItem::where('user_id', $userId)
                       ->where('id', $bankItemId)
-                      ->with('items')
+                      ->with(['items' => function ($query) {
+                            $query->with('formatReponse', 'modaliteReponses.formatReponse');
+                        }])
                       ->firstOrFail();
                       
     }
 
+    //recupère tous les bank items avec leurs items associés pour un userId donné
     public function getAllBankItemForUserId($userId)
     {
-        return User::findOrFail($userId)
-                ->bankItems()
-                ->with('items')
+        return BankItem::where('user_id', $userId)
+                ->with(['items' => function ($query) {
+                    $query->with('formatReponse', 'modaliteReponses.formatReponse');
+                }])
                 ->get();
+                
     }
 
     public function create(array $data)

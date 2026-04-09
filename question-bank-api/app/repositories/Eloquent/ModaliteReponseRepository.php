@@ -8,12 +8,12 @@ class ModaliteReponseRepository implements ModaliteReponseRepositoryInterface
 {
     public function getAll()
     {
-        return ModaliteReponse::all();
+        return ModaliteReponse::with('formatReponse')->get();
     }
 
     public function getById($id)
     {
-        $modaliteReponseId = ModaliteReponse::findOrFail($id);
+        $modaliteReponseId = ModaliteReponse::with('formatReponse')->findOrFail($id);
         if (empty($modaliteReponseId)) {
             return "bank Item pas trouvé";
         }
