@@ -15,11 +15,17 @@ class BankItemItemController extends Controller
          $this->bankItemItemRepository = $bankItemItemRepository;
     }
 
+    /**
+     * Récupère tous les bank item items
+     */
     public function index()
     {
         return response()->json($this->bankItemItemRepository->getAll());
     }
 
+    /**
+     * Crée un nouveau bank item item
+     */
     public function store(StoreBankItemItemRequest $request)
     {
         $data = $request->validated();

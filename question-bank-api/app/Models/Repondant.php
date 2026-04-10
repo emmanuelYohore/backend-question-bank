@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Repondant extends Model
 {
     protected $table = 'repondants';
-    protected $fillable = ['enquete_id', 'session_id'];
+    protected $fillable = ['session_id','ip_address','completed'];
 
-    public function enquete()
+    public function enquetes()
     {
-        return $this->belongsTo(Enquete::class);
+        return $this->belongsToMany(Enquete::class, 'enquete_repondants');
     }
 
     public function reponses()

@@ -17,6 +17,10 @@ class RepondantController extends Controller
          $this->repondantRepository = $repondantRepository;
     }
 
+    /**
+     * Récupère tous les repondants
+      *
+     */
     public function index()
     {
         return response()->json($this->repondantRepository->getAll());

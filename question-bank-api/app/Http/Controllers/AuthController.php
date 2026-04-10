@@ -14,11 +14,12 @@ class AuthController extends Controller
     ) {}
 
 
+    /**
+     * Enregistre un nouvel utilisateur et génère un token JWT pour l'authentification.
+     */
     public function register(StoreUserRequest $request)
     {
-        $data = $request->validated();
-        //$data['role'] = $data['role'] ?? 'user';
-    
+        $data = $request->validated();    
         try {
 
             $user = $this->userRepository->create($data);
@@ -36,6 +37,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Authentifie un utilisateur existant et génère un token JWT pour l'authentification.
+     */
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
@@ -56,6 +60,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Rafraîchit le token JWT de l'utilisateur authentifié.
+     */
     public function refreshToken()  {
         try {
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
@@ -79,6 +86,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Déconnecte l'utilisateur en invalidant son token JWT.
+     */
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
@@ -88,6 +98,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Récupère les informations de l'utilisateur authentifié à partir du token JWT.
+     */
     public function me()
     {
         try {

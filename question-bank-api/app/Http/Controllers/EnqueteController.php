@@ -20,7 +20,9 @@ class EnqueteController extends Controller
          $this->enqueteRepository = $enqueteRepository;
     }
 
-    //recupère toutes les enquêtes et recherche par titre d'enquête
+    /**
+     * Récupère toutes les enquêtes et recherche par titre d'enquête
+     */
     public function index(Request $request)
     {
         $query = Enquete::query();
@@ -30,7 +32,9 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
-    //crée une enquête
+    /**
+     * Crée une nouvelle enquête
+     */
     public function store(StoreEnqueteRequest $request)
     {
         $data = $request->validated();
@@ -44,20 +48,26 @@ class EnqueteController extends Controller
             ], 201);
     }
 
-    //recupère une enquête en fonction de son id
+    /**
+     * Récupère une enquête en fonction de son id
+     */
     public function show(string $id)
     {
          return response()->json($this->enqueteRepository->getById($id));
     }
 
-    //recupère une enquête avec ses bank items associés pour un userId      
+    /**
+     * Récupère une enquête avec ses bank items associés pour un userId
+     */
     public function getOneEnqueteForUserId(string $userId, string $enqueteId)
     {
         return response()->json($this->enqueteRepository->getOneEnqueteForUserId($userId, $enqueteId));
 
     }
 
-    //recupère toutes les enquêtes avec leurs bank items associés pour un userId et recherche par titre d'enquête
+    /**
+     * Récupère toutes les enquêtes avec leurs bank items associés pour un userId et recherche par titre d'enquête
+     */
     public function getAllEnqueteForUserId(string $userId, Request $request)
     {
         $query = Enquete::where('user_id', $userId);
@@ -69,7 +79,9 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
-    //ajoute des bank items à une enquête pour un userId
+    /**
+     * Ajoute des bank items à une enquête pour un userId
+     */
     public function attachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -111,6 +123,9 @@ class EnqueteController extends Controller
         ], 200);
     }
 
+    /**
+     * Retire des bank items d'une enquête pour un userId donné
+     */
     public function detachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -140,7 +155,9 @@ class EnqueteController extends Controller
         ], 200);
     }
 
-    //met à jour une enquête en fonction de son id
+    /**
+     * Met à jour une enquête en fonction de son id
+     */
     public function update(UpdateEnqueteRequest $request, string $id)
     {   
         $data = $request->validated();
@@ -153,7 +170,9 @@ class EnqueteController extends Controller
         ], 200);
     }
 
-   //supprime une enquête en fonction de son id
+    /**
+     * Supprime une enquête en fonction de son id
+     */
     public function destroy(string $id)
     {
         $this->enqueteRepository->delete($id);

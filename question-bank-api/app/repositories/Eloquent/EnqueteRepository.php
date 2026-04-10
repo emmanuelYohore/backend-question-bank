@@ -1,7 +1,6 @@
 <?php 
 namespace App\Repositories\Eloquent;
 
-use App\Models\BankItem;
 use App\Models\Enquete;
 use App\Models\User;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
@@ -9,11 +8,17 @@ use App\Repositories\Interfaces\EnqueteRepositoryInterface;
 
 class EnqueteRepository implements EnqueteRepositoryInterface
 {
+    /**
+     * Récupère toutes les enquêtes
+     */
     public function getAll()
     {
         return Enquete::all();
     }
 
+    /**
+     * Récupère une enquête en fonction de son id
+     */
     public function getById($id)
     {
         $enqueteId = Enquete::findOrFail($id);
@@ -23,20 +28,9 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return $enqueteId;
     }
 
-    // public function getOneEnqueteForUserId($userId, $enqueteId)
-    // {
-    //     return Enquete::where('user_id', $userId)
-    //                   ->where('id', $enqueteId)
-    //                   ->firstOrFail();
-    // }
-
-    // public function getAllEnqueteForUserId($id){
-    //     $enquetesUser = Enquete::all()->where('user_id', $id);
-    //     return $enquetesUser;
-    // }
-  
-
-    //recupère une enquête avec ses bank items associés pour un userId 
+    /**
+     * Récupère une enquête avec ses bank items associés pour un userId
+     */
     public function getOneEnqueteForUserId($userId, $enqueteId)
     {
         return Enquete::where('user_id', $userId)
@@ -51,7 +45,9 @@ class EnqueteRepository implements EnqueteRepositoryInterface
                       ->firstOrFail();
     }
 
-    //recupère toutes les enquêtes avec leurs bank items associés pour un userId 
+    /**
+     * Récupère toutes les enquêtes avec leurs bank items associés pour un userId donné
+     */
     public function getAllEnqueteForUserId($userId)
     {
         return User::findOrFail($userId)
@@ -66,12 +62,17 @@ class EnqueteRepository implements EnqueteRepositoryInterface
                 ->get();
     }
 
-
+    /**
+     * Crée une nouvelle enquête
+     */
     public function create(array $data)
     {
         return Enquete::create($data);
     }
 
+    /**
+     * Met à jour une enquête en fonction de son id
+     */
     public function update($id, array $data)
     {
         $enquete = Enquete::findOrFail($id);
@@ -79,6 +80,9 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return $enquete;
     }
 
+    /**
+     * Supprime une enquête en fonction de son id
+     */
     public function delete($id)
     {
         return Enquete::destroy($id);

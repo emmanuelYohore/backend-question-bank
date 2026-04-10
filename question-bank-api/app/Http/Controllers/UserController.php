@@ -21,11 +21,13 @@ class UserController extends Controller
          $this->userRepository = $userRepository;
     }
 
-    //recupère tous les users et recherche par email
+    /**
+     * Récupère tous les users et recherche par email
+     */
     public function index(Request $request)
     {
         try {
-            $query =User::query();
+            $query = User::query();
             if ($search = $request->input('search')) {
             $query->where('email', 'like', "%{$search}%");
         }
@@ -38,7 +40,9 @@ class UserController extends Controller
         }
     }
 
-    //crée un user
+    /**
+     * Crée un nouvel utilisateur
+     */
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
@@ -59,7 +63,9 @@ class UserController extends Controller
         ], 201);           
     }
 
-    //recupère un user en fonction de son id
+    /**
+     * Récupère un user en fonction de son id
+     */
     public function show(string $id)
     {
         try {
@@ -71,7 +77,9 @@ class UserController extends Controller
         }
     }
 
-    //met à jour un user en fonction de son id
+    /**
+     * Met à jour un user en fonction de son id
+     */
     public function update(UpdateUserRequest $request, string $id)
     {   
         $data = $request->validated();
@@ -92,7 +100,9 @@ class UserController extends Controller
         }
     }
 
-    //supprime un user en fonction de son id
+    /**
+     * Supprime un user en fonction de son id
+     */
     public function destroy(string $id)
     {
         try {

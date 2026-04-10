@@ -21,7 +21,9 @@ class BankItemController extends Controller
          $this->bankItemRepository = $bankItemRepository;
     }
 
-    //recupère tous les bank items et recherche par nom de bank item
+    /**
+     * Récupère tous les bank items et recherche par nom de bank item
+     */
     public function index(Request $request)
     {
         $query = BankItem::query();
@@ -32,7 +34,9 @@ class BankItemController extends Controller
         
     }
 
-    //crée une bank item 
+    /**
+     * Crée une nouvelle bank item
+     */
     public function store(StoreBankItemRequest $request)
     {
         $data = $request->validated();
@@ -45,7 +49,9 @@ class BankItemController extends Controller
             ], 201);
     }
 
-    //recupère une bank item en fonction de son id 
+    /**
+     * Récupère une bank item en fonction de son id
+     */
     public function show(string $id)
     {
         try {
@@ -57,14 +63,18 @@ class BankItemController extends Controller
         }
     }
 
-    //recupère un bank item avec ses items associés pour un userId
+    /**
+     * Récupère un bank item avec ses items associés pour un userId
+     */
     public function getOneBankItemForUserId(string $userId, string $bankItemId)
     {
         return response()->json($this->bankItemRepository->getOneBankItemForUserId($userId, $bankItemId));
 
     }
 
-    //recupère tous les bank items avec leurs items associés pour un userId  et recherche par nom de bank item
+    /**
+     * Récupère tous les bank items avec leurs items associés pour un userId  et recherche par nom de bank item
+     */
     public function getAllBankItemForUserId(string $userId, Request $request)
     {
         $query = BankItem::where('user_id', $userId)->with(['items' => function ($q) {
@@ -80,7 +90,9 @@ class BankItemController extends Controller
         return response()->json($query->get(), 200);
     }
        
-    //met à jour une bank item en fonction de son id
+    /**
+     * Met à jour une bank item en fonction de son id
+     */
     public function update(UpdateBankItemRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -92,7 +104,9 @@ class BankItemController extends Controller
         ], 200);
     }
 
-    //ajoute des items à une bank item pour un userId 
+    /**
+     * Ajoute des items à une bank item pour un userId donné
+     */
     public function attachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)
     {
         $bank = BankItem::findOrFail($bankItemId);
@@ -135,7 +149,9 @@ class BankItemController extends Controller
         ], 200);
     }
 
-    //retire des items d'une bank item pour un userId 
+    /**
+     * Retire des items d'une bank item pour un userId donné
+     */
     public function detachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)
     {
         $bank = BankItem::findOrFail($bankItemId);
@@ -165,6 +181,9 @@ class BankItemController extends Controller
         ], 200);
     }
    
+    /**
+     * Supprime une bank item en fonction de son id
+     */
     public function destroy(string $id)
     {
         try {

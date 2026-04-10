@@ -1,20 +1,23 @@
 <?php 
 namespace App\Repositories\Eloquent;
 
-use App\Enums\RoleType;
-use App\Models\Role;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
+    /**
+     * Récupère tous les users
+     */
     public function getAll()
     {
         return User::all();
     }
 
+    /**
+     * Récupère un user en fonction de son id
+     */
     public function getById($id)
     {
         $userId = User::findOrFail($id);
@@ -24,6 +27,9 @@ class UserRepository implements UserRepositoryInterface
         return $userId;
     }
 
+    /**
+     * Crée un nouveau user
+     */
     public function create(array $data)
     {
         $data['password'] = Hash::make($data['password']);
@@ -31,6 +37,9 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    /**
+     * Met à jour un user en fonction de son id
+     */
     public function update($id, array $data)
     {
         $user = User::findOrFail($id);
@@ -38,6 +47,9 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    /**
+     * Supprime un user en fonction de son id
+     */
     public function delete($id)
     {
         return User::destroy($id);

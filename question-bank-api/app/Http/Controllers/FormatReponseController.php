@@ -15,12 +15,19 @@ class FormatReponseController extends Controller
     ) {
          $this->formatReponseRepository = $formatReponseRepository;
     }
-    
+
+    /**
+     * Récupère tous les formatReponses
+      *
+     */
     public function index()
     {
         return response()->json($this->formatReponseRepository->getAll());
     }
 
+    /**
+     * Crée une formatReponse
+     */
     public function store(StoreFormatReponseRequest $request)
     {
         $data = $request->validated();
@@ -36,13 +43,17 @@ class FormatReponseController extends Controller
             ], 201);
     }
 
-
+    /**
+     * Récupère une formatReponse en fonction de son id
+     */
     public function show(string $id)
     {
          return response()->json($this->formatReponseRepository->getById($id));
     }
 
-    
+    /**
+     * Met à jour une formatReponse en fonction de son id
+     */
     public function update(UpdateFormatReponseRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -54,7 +65,9 @@ class FormatReponseController extends Controller
         ], 200);
     }
 
-   
+   /**
+    * Supprime une formatReponse en fonction de son id
+    */
     public function destroy(string $id)
     {
         try {

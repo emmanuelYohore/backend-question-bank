@@ -42,7 +42,7 @@ class Enquete extends Model
 
     public function repondants()
     {
-        return $this->hasMany(Repondant::class);
+        return $this->belongsToMany(Repondant::class, 'enquete_repondants');
     }
 }
 

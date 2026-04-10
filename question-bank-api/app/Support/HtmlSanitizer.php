@@ -5,6 +5,11 @@ namespace App\Support;
 use DOMDocument;
 use DOMElement;
 
+/**
+ *  Cette classe fournit une méthode pour nettoyer le HTML des enquêtes en utilisant une liste d'autorisation
+ *  stricte. Elle utilise DOMDocument pour analyser et manipuler le HTML, en supprimant les balises et les attributs non autorisés, 
+ *  et en s'assurant que les liens sont sûrs.
+ */
 class HtmlSanitizer
 {
     private const ALLOWED_TAGS = [

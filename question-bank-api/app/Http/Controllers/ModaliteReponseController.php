@@ -17,13 +17,17 @@ class ModaliteReponseController extends Controller
          $this->modaliteReponseRepository = $modaliteReponseRepository;
     }
 
-    //recupère tous les modaliteReponses
+    /**
+     * Récupère tous les modaliteReponses
+     */
     public function index()
     {
         return response()->json($this->modaliteReponseRepository->getAll());
     }
 
-    //crée une modaliteReponse
+    /**
+     * Crée une nouvelle modaliteReponse
+     */
     public function store(StoreModaliteReponseRequest $request)
     {
         $data = $request->validated();
@@ -35,13 +39,17 @@ class ModaliteReponseController extends Controller
             ], 201);
     }
 
-    //récupère une modaliteReponse en fonction de son id
+    /**
+     * Récupère une modaliteReponse en fonction de son id
+     */
     public function show(string $id)
     {
          return response()->json($this->modaliteReponseRepository->getById($id));
     }
 
-    //met à jour une modaliteReponse en fonction de son id
+    /**
+     * Met à jour une modaliteReponse en fonction de son id
+     */
     public function update(UpdateModaliteReponseRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -53,7 +61,9 @@ class ModaliteReponseController extends Controller
         ], 200);
     }
 
-    //supprime une modaliteReponse en fonction de son id
+    /**
+     * Supprime une modaliteReponse en fonction de son id
+     */
     public function destroy(string $id)
     {
         try {
