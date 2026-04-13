@@ -9,6 +9,7 @@ class Reponse extends Model
     protected $table = 'reponses';
     protected $fillable = [
         'repondant_id',
+        'enquete_id',
         'item_id',
         'modalite_reponse_id',
         'valeur_texte',

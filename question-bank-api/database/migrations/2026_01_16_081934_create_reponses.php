@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('repondant_id')->constrained('repondants')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->foreignId('modalite_reponse_id')->nullable()->constrained('modalite_reponses')->onDelete('cascade');
-            $table->string('valeur_texte')->nullable();
-            $table->string('valeur_evn')->nullable();
+            $table->foreignId('enquete_id')->constrained('enquetes')->onDelete('cascade');
+            $table->foreignId('modalite_reponse_id')->nullable(true)->constrained('modalite_reponses')->onDelete('cascade');
+            $table->string('valeur_texte')->nullable(true);
+            $table->string('valeur_evn')->nullable(true);
             $table->timestamps();
         });
     }

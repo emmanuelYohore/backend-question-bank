@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Repondant extends Model
 {
     protected $table = 'repondants';
-    protected $fillable = ['session_id','ip_address','completed'];
+    protected $fillable = ['session_id','ip_address','user_agent','started_at','completed_at'];
 
     public function enquetes()
     {

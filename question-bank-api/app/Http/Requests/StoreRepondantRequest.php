@@ -23,8 +23,10 @@ class StoreRepondantRequest extends FormRequest
     {
         return [
             'session_id'      => 'required|string|max:255',
-            'enquete_id' => 'required|exists:enquetes,id',
-            
+            'enquete_id' => 'required|exists:enquetes,id',          
+            'started_at' => 'nullable|date',
+            'completed_at' => 'nullable|date|after_or_equal:started_at'
+        
         ];
     }
 }

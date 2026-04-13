@@ -170,6 +170,7 @@ class EnqueteController extends Controller
         ], 200);
     }
 
+   
     /**
      * Supprime une enquête en fonction de son id
      */
