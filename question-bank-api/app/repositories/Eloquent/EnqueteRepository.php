@@ -36,11 +36,13 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return Enquete::where('user_id', $userId)
                       ->where('id', $enqueteId)
                       ->with(['bankItems' => function ($query) {
-                          $query->with(['items' => function ($q) {
-                              $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
-                                  $mq->with('formatReponse');
-                              }]);
-                          }]);
+                          $query->withPivot('ordre')
+                                ->orderBy('enquete_banks.ordre')
+                                ->with(['items' => function ($q) {
+                                    $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                                        $mq->with('formatReponse');
+                                    }]);
+                                }]);
                       }])
                       ->firstOrFail();
     }
@@ -53,11 +55,13 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return User::findOrFail($userId)
                 ->enquetes()
                 ->with(['bankItems' => function ($query) {
-                    $query->with(['items' => function ($q) {
-                        $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
-                            $mq->with('formatReponse');
-                        }]);
-                    }]);
+                    $query->withPivot('ordre')
+                          ->orderBy('enquete_banks.ordre')
+                          ->with(['items' => function ($q) {
+                              $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                                  $mq->with('formatReponse');
+                              }]);
+                          }]);
                 }])
                 ->get();
     }

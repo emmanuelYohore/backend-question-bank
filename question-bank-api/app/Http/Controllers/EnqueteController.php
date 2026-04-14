@@ -124,34 +124,43 @@ class EnqueteController extends Controller
     }
 
     /**
-     * Retire des bank items d'une enquête pour un userId donné
+     * Persists the order of bank items for an enquete
      */
-    public function detachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
+    public function saveBankItemsOrder(Request $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
 
         if ($enquete->user_id !== (int)$userId) {
             return response()->json([
-                'error' => 'Vous n\'êtes pas autorisé à retirer des banques de cette enquête'
+                'error' => 'Vous n\'êtes pas autorisé à modifier les banques de cette enquête'
             ], 403);
         }
 
         $authenticatedUser = JWTAuth::parseToken()->authenticate();
         if ($authenticatedUser->id !== (int)$userId) {
             return response()->json([
-                'error' => 'Vous ne pouvez retirer des banques d\'items qu\'à vos propres enquêtes'
+                'error' => 'Vous ne pouvez modifier les banques d\'items qu\'à vos propres enquêtes'
             ], 403);
         }
 
-        $data = $request->validated();
-        
-        $enquete->bankItems()->detach($data['bank_item_ids']);
-        
+        $data = $request->validate([
+            'bank_item_ids' => 'required|array',
+            'bank_item_ids.*' => 'integer|exists:bank_items,id',
+        ]);
+
+        foreach ($data['bank_item_ids'] as $index => $bankItemId) {
+            $enqueteBank = $enquete->enqueteBanks()->where('bank_item_id', $bankItemId)->first();
+            if ($enqueteBank) {
+                $enqueteBank->ordre = $index;
+                $enqueteBank->save();
+            }
+        }
+
         return response()->json([
-            'message' => 'Banque d\'items retirés de l\'enquête avec succès',
+            'message' => 'Ordre des banques d\'items mis à jour avec succès',
             'enquete_id' => $enquete->id,
             'user_id' => $userId,
-            'detached_bank_item_ids' => $data['bank_item_ids']
+            'ordered_bank_item_ids' => $data['bank_item_ids']
         ], 200);
     }
 

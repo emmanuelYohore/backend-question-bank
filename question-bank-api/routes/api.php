@@ -41,6 +41,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');
         Route::delete('v1/users/{userId}/enquetes/{enqueteId}/bank-items/detach', 'detachBankItems');                     
         Route::get('v1/users/{userId}/enquetes/{enqueteId}', 'getOneEnqueteForUserId');
+        Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items/order', 'saveBankItemsOrder');
         Route::get('v1/users/{userId}/enquetes', 'getAllEnqueteForUserId');
     });
     
