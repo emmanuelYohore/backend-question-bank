@@ -84,6 +84,8 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('v1/bank-items/{id}', 'destroy');
         Route::post('v1/bank-items', 'store');
         
+        Route::post('v1/users/{userId}/bank-items/{bankItemId}/items/order', 'saveItemsOrder');
+
         Route::get('v1/users/{userId}/bank-items/{bankItemId}', 'getOneBankItemForUserId');
         Route::get('v1/users/{userId}/bank-items', 'getAllBankItemForUserId');
         Route::post('v1/users/{userId}/bank-items/{bankItemId}/items', 'attachItems');        

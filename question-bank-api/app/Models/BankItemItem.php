@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BankItemItem extends Model
 {
     protected $table = 'bank_item_items';
-    protected $fillable = ['bank_item_id','item_id' ];
+    protected $fillable = ['bank_item_id','item_id', 'ordre'];
 
     public function bankItem()
     {

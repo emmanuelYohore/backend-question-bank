@@ -34,7 +34,9 @@ class BankItem extends Model
 
     public function items()
     {
-        return $this->belongsToMany(Item::class, 'bank_item_items');
+        return $this->belongsToMany(Item::class, 'bank_item_items')
+                    ->withPivot('ordre')
+                    ->withTimestamps();
     }
 }
 

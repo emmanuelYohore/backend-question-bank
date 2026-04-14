@@ -48,7 +48,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
     }
 
     /**
-     * Récupère toutes les enquêtes avec leurs bank items associés pour un userId donné
+     * Récupère toutes les enquêtes avec leurs bank items associés pour un userId donné ordonnés par ordre défini dans la table de pivot
      */
     public function getAllEnqueteForUserId($userId)
     {

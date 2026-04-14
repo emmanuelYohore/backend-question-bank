@@ -24,6 +24,8 @@ class UpdateBankItemItemRequest extends FormRequest
         return [
             'bank_item_id' => 'sometimes|integer|exists:bank_items,id',
             'item_id' => 'sometimes|integer|exists:items,id',
+            'ordre' => 'sometimes|integer|min:0',
+
         ];
     }
 }

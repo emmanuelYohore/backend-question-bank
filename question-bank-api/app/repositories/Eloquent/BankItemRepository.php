@@ -2,6 +2,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\BankItem;
+use App\Models\User;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
 
 class BankItemRepository implements BankItemRepositoryInterface
@@ -31,28 +32,32 @@ class BankItemRepository implements BankItemRepositoryInterface
      */
     public function getOneBankItemForUserId($userId, $bankItemId)
     {
-        return BankItem::where('user_id', $userId)
-                      ->where('id', $bankItemId)
-                      ->with(['items' => function ($query) {
-                            $query->with('formatReponse', 'modaliteReponses.formatReponse');
-                        }])
-                      ->firstOrFail();
+          return BankItem::where('user_id', $userId)
+                    ->where('id', $bankItemId)
+                    ->with(['items' => function ($query) {
+                        $query->orderBy('bank_item_items.ordre')
+                            ->with('formatReponse', 'modaliteReponses.formatReponse');
+                    }])
+                    ->firstOrFail();
                       
     }
 
-    /**
-     * Récupère tous les bank items avec leurs items associés pour un userId donné
+ 
+      /**
+     * Récupère toutes les bank items  avec leurs bank items associés pour un userId donné ordonnés par ordre défini dans la table de pivot
      */
     public function getAllBankItemForUserId($userId)
     {
-        return BankItem::where('user_id', $userId)
+        return User::findOrFail($userId)
+                ->bankItems()
                 ->with(['items' => function ($query) {
-                    $query->with('formatReponse', 'modaliteReponses.formatReponse');
+                    $query->orderBy('bank_item_items.ordre')
+                          ->with(['formatReponse', 'modaliteReponses.formatReponse']);
                 }])
                 ->get();
-                
     }
 
+    
     /**
      * Crée un nouveau bank item
      */

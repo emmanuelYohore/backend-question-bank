@@ -105,6 +105,38 @@ class BankItemController extends Controller
     }
 
     /**
+     * Persists the order of  items for an bank
+     */
+    public function saveItemsOrder(Request $request, string $userId, string $bankItemId)
+    {
+        $data = $request->validate([
+            'ordered_item_ids' => 'required|array',
+            'ordered_item_ids.*' => 'integer|exists:items,id',
+        ]);
+
+        $orderedItemIds = $data['ordered_item_ids'];
+
+        $bankItem = BankItem::where('user_id', $userId)
+                            ->where('id', $bankItemId)
+                            ->firstOrFail();
+
+        $syncData = [];
+        foreach ($orderedItemIds as $index => $itemId) {
+            $syncData[$itemId] = ['ordre' => $index + 1];
+        }
+
+        $bankItem->items()->syncWithoutDetaching($syncData);
+
+        return response()->json([
+            'message' => 'Order of items saved successfully.',
+            'bank_id' => $bankItem->id,
+            'user_id' => $userId,
+            'ordered_item_ids' => $orderedItemIds
+        ], 200);
+
+    }
+
+    /**
      * Ajoute des items à une bank item pour un userId donné
      */
     public function attachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)

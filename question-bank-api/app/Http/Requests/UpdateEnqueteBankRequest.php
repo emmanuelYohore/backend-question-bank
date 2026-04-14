@@ -24,7 +24,7 @@ class UpdateEnqueteBankRequest extends FormRequest
          return [
             'enquete_id' => 'sometimes|exists:enquetes,id',
             'bank_item_id'      => 'sometimes|exists:bank_items,id',
-            'order' => 'sometimes|integer|min:0',      
+            'ordre' => 'sometimes|integer|min:0',
             'mode' => 'sometimes|string|in:systematique,random',
             
         ];

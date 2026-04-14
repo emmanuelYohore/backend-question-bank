@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->integer('ordre')->nullable();
             $table->timestamps();          
             $table->unique(['bank_item_id', 'item_id']);
         });
