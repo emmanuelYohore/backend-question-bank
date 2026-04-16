@@ -57,6 +57,18 @@ class EnqueteController extends Controller
     }
 
     /**
+     * Récupère une enquête publiquement par son URL (accès anonyme)
+     */
+    public function getByUrl(string $url)
+    {
+        $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
+            ->with(['bankItems.items.formatReponse', 'bankItems.items.modaliteReponses'])
+            ->firstOrFail();
+
+        return response()->json($enquete);
+    }
+
+    /**
      * Récupère une enquête avec ses bank items associés pour un userId
      */
     public function getOneEnqueteForUserId(string $userId, string $enqueteId)

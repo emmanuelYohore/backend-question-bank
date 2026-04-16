@@ -14,6 +14,7 @@ class StoreReponseRequest extends FormRequest
     {
         return [
             'repondant_id' => 'required|exists:repondants,id',
+            'enquete_id' => 'required|exists:enquetes,id',
             'item_id' => 'required|exists:items,id',
             'modalite_reponse_id' => 'nullable|exists:modalite_reponses,id',
             'valeur_texte' => 'nullable|string',

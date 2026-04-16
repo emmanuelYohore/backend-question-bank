@@ -24,6 +24,6 @@ class AttachItemsToBankRequest extends FormRequest
        return [
         'item_ids' => 'required|array|min:1',
         'item_ids.*' => 'exists:items,id',
-    ];
+        ];
     }
 }

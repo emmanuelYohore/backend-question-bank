@@ -29,8 +29,16 @@ class RepondantController extends Controller
     public function store(StoreRepondantRequest $request)
     {
         $data = $request->validated();
+        $enqueteId = $data['enquete_id'];
+        
+        // Retirer enquete_id des données pour ne pas causer MassAssignmentException
+        unset($data['enquete_id']);
         
         $repondant = $this->repondantRepository->create($data);
+        
+        // Attacher l'enquete via la relation many-to-many
+        $repondant->enquetes()->attach($enqueteId);
+        
         return response()->json([
             "message"=> "repondant crée avec succès",
             "repondant"=> $repondant
