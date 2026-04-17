@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('enquete_id')->constrained('enquetes')->onDelete('cascade');
             $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
             $table->string('mode')->default('systematique');
+            $table->integer('ordre')->nullable();
             $table->unique(['enquete_id', 'bank_item_id']);
             $table->timestamps();
         });

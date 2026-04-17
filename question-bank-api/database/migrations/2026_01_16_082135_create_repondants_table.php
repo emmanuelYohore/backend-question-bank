@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('repondants', function (Blueprint $table) {
             $table->id();
             $table->string('session_id')->unique()->nullable(false);
-            $table->string('ip_address');
-            $table->string('user_agent');
             $table->timestamp('started_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

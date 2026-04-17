@@ -58,7 +58,7 @@ class EnqueteController extends Controller
     }
 
     /**
-     * Récupère une enquête publiquement par son URL (accès anonyme)
+     * Récupère une enquête par son URL (accès anonyme)
      */
     public function getByUrl(string $url)
     {

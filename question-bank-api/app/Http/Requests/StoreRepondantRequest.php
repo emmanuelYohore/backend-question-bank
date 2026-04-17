@@ -24,8 +24,6 @@ class StoreRepondantRequest extends FormRequest
         return [
             'session_id'      => 'required|string|max:255',
             'enquete_id'      => 'required|exists:enquetes,id',
-            'ip_address'      => 'nullable|string|max:45',
-            'user_agent'      => 'nullable|string|max:500',
             'started_at'      => 'nullable|date',
             'completed_at'    => 'nullable|date|after_or_equal:started_at'
         ];
