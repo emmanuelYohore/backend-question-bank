@@ -6,6 +6,7 @@ use App\Http\Requests\AttachBankItemsToEnqueteRequest;
 use App\Http\Requests\StoreEnqueteRequest;
 use App\Http\Requests\UpdateEnqueteRequest;
 use App\Models\Enquete;
+use App\Models\Reponse;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -202,5 +203,40 @@ class EnqueteController extends Controller
         return response()->json([
             'enquete deleted' 
             ]);
+    }
+
+    /**
+     * Récupère toutes les réponses d'une enquête
+     */
+    public function getReponsesByEnquete(string $enqueteId)
+    {
+        try {
+            $reponses =Reponse::where('enquete_id', $enqueteId)
+                ->with(['item', 'modaliteReponse', 'repondant'])
+                ->get()
+                ->map(function ($reponse) {
+                    return [
+                        'id' => $reponse->id,
+                        'enquete_id' => $reponse->enquete_id,
+                        'enquete_title' => $reponse->enquete?->title,
+                        'repondant_id' => $reponse->repondant_id,
+                        'item_id' => $reponse->item_id,
+                        'item_question' => $reponse->item?->question,
+                        'modalite_reponse_id' => $reponse->modalite_reponse_id,
+                        'format_reponse_type' => $reponse->item?->formatReponse?->type,
+                        'modalite_reponse_intitule' => $reponse->modaliteReponse?->intitule,
+                        'valeur_texte' => $reponse->valeur_texte,
+                        'valeur_evn' => $reponse->valeur_evn,
+                        'created_at' => $reponse->created_at,
+                    ];
+                });
+
+            return response()->json($reponses, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération des réponses',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

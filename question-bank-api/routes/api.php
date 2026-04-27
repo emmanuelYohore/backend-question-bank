@@ -56,6 +56,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('v1/users/{userId}/enquetes/{enqueteId}', 'getOneEnqueteForUserId');
         Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items/order', 'saveBankItemsOrder');
         Route::get('v1/users/{userId}/enquetes', 'getAllEnqueteForUserId');
+        Route::get('v1/enquetes/{enqueteId}/reponses', 'getReponsesByEnquete');
     });
     
     Route::controller(FormatReponseController::class)->group(function () {

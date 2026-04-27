@@ -26,8 +26,6 @@ class StoreBankItemItemRequest extends FormRequest
             'item_ids' => 'required|array',
             'item_ids.*' => 'exists:items,id',
             'ordre' => 'sometimes|integer|min:0',
-
-
             
         ];
     }

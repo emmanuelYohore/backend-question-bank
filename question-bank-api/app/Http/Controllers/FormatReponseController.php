@@ -66,7 +66,7 @@ class FormatReponseController extends Controller
     }
 
    /**
-    * Supprime une formatReponse en fonction de son id
+    * Supprime un formatReponse en fonction de son id
     */
     public function destroy(string $id)
     {
