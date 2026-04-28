@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('repondants', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('session_id')->unique()->nullable(false);
             $table->timestamp('started_at')->nullable();
             $table->timestamp('completed_at')->nullable();

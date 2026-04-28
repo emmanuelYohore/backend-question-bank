@@ -100,14 +100,14 @@ class EnqueteController extends Controller
     {
         $enquete = Enquete::findOrFail($enqueteId);
 
-        if ($enquete->user_id !== (int)$userId) {
+        if ($enquete->user_id !== $userId) {
             return response()->json([
                 'error' => 'Vous n\'êtes pas autorisé à ajouter des banques à cette enquête'
             ], 403);
         }
 
         $authenticatedUser = JWTAuth::parseToken()->authenticate();
-        if ($authenticatedUser->id !== (int)$userId) {
+        if ($authenticatedUser->id !== $userId) {
             return response()->json([
                 'error' => 'Vous ne pouvez ajouter des banques d\'items qu\'à vos propres enquêtes'
             ], 403);
@@ -125,8 +125,17 @@ class EnqueteController extends Controller
             ], 400);
         }
         
-        $enquete->bankItems()->syncWithoutDetaching($data['bank_item_ids']);
-        
+$existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
+        $newBankItemIds = collect($data['bank_item_ids'])->diff($existingBankItemIds)->values()->all();
+
+        $attachData = [];
+        foreach ($newBankItemIds as $bankItemId) {
+            $attachData[$bankItemId] = ['id' => (string) Str::uuid()];
+        }
+
+        if (!empty($attachData)) {
+            $enquete->bankItems()->attach($attachData);
+        }        
         $attachedBankItems = $enquete->bankItems()->whereIn('bank_items.id', $data['bank_item_ids'])->get();
         
         return response()->json([
@@ -144,14 +153,14 @@ class EnqueteController extends Controller
     {
         $enquete = Enquete::findOrFail($enqueteId);
 
-        if ($enquete->user_id !== (int)$userId) {
+        if ($enquete->user_id !== $userId) {
             return response()->json([
                 'error' => 'Vous n\'êtes pas autorisé à modifier les banques de cette enquête'
             ], 403);
         }
 
         $authenticatedUser = JWTAuth::parseToken()->authenticate();
-        if ($authenticatedUser->id !== (int)$userId) {
+        if ($authenticatedUser->id !== $userId) {
             return response()->json([
                 'error' => 'Vous ne pouvez modifier les banques d\'items qu\'à vos propres enquêtes'
             ], 403);
@@ -219,7 +228,7 @@ class EnqueteController extends Controller
                         'id' => $reponse->id,
                         'enquete_id' => $reponse->enquete_id,
                         'enquete_title' => $reponse->enquete?->title,
-                        'repondant_id' => $reponse->repondant_id,
+                        'repondant' => $reponse->repondant_session_id,
                         'item_id' => $reponse->item_id,
                         'item_question' => $reponse->item?->question,
                         'modalite_reponse_id' => $reponse->modalite_reponse_id,

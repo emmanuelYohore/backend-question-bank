@@ -20,12 +20,12 @@ class StoreRepondantRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'session_id'      => 'required|string|max:255',
-            'enquete_id'      => 'required|exists:enquetes,id',
-            'started_at'      => 'nullable|date',
-            'completed_at'    => 'nullable|date|after_or_equal:started_at'
-        ];
-    }
+{
+    return [
+        'session_id'   => 'required|string|max:255', // ← plus de unique
+        'enquete_id'   => 'required|exists:enquetes,id',
+        'started_at'   => 'nullable|date',
+        'completed_at' => 'nullable|date|after_or_equal:started_at'
+    ];
+}
 }

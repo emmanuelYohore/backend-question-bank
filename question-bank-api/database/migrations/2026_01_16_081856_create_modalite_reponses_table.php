@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('modalite_reponses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
+            $table->foreignUuid('item_id')->constrained('items')->onDelete('cascade');
             $table->string('intitule')->nullable()->default('pas d\'intitulé');
             $table->string('v1')->nullable();
             $table->string('v2')->nullable();

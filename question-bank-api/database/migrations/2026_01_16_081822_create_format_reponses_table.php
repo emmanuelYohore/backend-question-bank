@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('format_reponses', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->enum('type',array_column(FormatReponseType::cases(), 'value'))->default(FormatReponseType::TEXTE->value);
             $table->timestamps();
         });

@@ -4,12 +4,18 @@ namespace App\Models;
 
 use App\Enums\RoleType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory;
+    use HasUuids;
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
     protected $table = 'users';
 
@@ -34,7 +40,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function bankItems()
     {
-        return $this->hasMany(BanKItem::class);
+        return $this->hasMany(BankItem::class);
     }
 
     public function getJWTIdentifier()

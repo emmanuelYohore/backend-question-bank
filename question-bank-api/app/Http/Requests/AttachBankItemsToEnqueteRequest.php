@@ -23,7 +23,7 @@ class AttachBankItemsToEnqueteRequest extends FormRequest
     {
        return [
         'bank_item_ids' => 'required|array|min:1',
-        'bank_item_ids.*' => 'exists:bank_items,id',
+        'bank_item_ids.*' => 'uuid|exists:bank_items,id',
     ];
     }
 }

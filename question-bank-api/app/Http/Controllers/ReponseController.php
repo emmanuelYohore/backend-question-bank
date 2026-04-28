@@ -24,12 +24,21 @@ class ReponseController extends Controller
     public function store(StoreReponseRequest $request)
     {
         $data = $request->validated();
-        
+        try {
+
         $reponse = $this->reponseRepository->create($data);
         return response()->json([
             "message"=> "reponse crée avec succès",
             "reponse"=> $reponse
             ], 201);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => 'Failed to create reponse, please try again',
+                'debug' => $e->getMessage(), 
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ], 500);
+        }
     }
 
 

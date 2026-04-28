@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Reponse extends Model
 {
+    use HasUuids;
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $table = 'reponses';
+
     protected $fillable = [
         'repondant_id',
         'enquete_id',
@@ -19,8 +27,6 @@ class Reponse extends Model
     protected $casts = [
         'completed'=> 'boolean',
     ];
-
-    
 
     public function repondant()
     {

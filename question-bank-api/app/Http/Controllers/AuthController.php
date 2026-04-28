@@ -19,7 +19,8 @@ class AuthController extends Controller
      */
     public function register(StoreUserRequest $request)
     {
-        $data = $request->validated();    
+        $data = $request->validated(); 
+        $data['role'] = $data['role'] ?? 'user';   
         try {
 
             $user = $this->userRepository->create($data);

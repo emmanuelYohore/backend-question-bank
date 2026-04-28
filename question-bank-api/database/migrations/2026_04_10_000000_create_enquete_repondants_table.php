@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('enquete_repondants', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('enquete_id')->constrained('enquetes')->cascadeOnDelete();
-            $table->foreignId('repondant_id')->constrained('repondants')->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('enquete_id')->constrained('enquetes')->cascadeOnDelete();
+            $table->foreignUuid('repondant_id')->constrained('repondants')->cascadeOnDelete();
             $table->timestamps();
 
             // Unique constraint to prevent duplicate entries

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRepondantRequest;
 use App\Http\Requests\UpdateRepondantRequest;
 use App\Repositories\Interfaces\RepondantRepositoryInterface;
+use Illuminate\Support\Str;
 
 class RepondantController extends Controller
 {
@@ -27,23 +28,31 @@ class RepondantController extends Controller
     }
 
     public function store(StoreRepondantRequest $request)
-    {
-        $data = $request->validated();
-        $enqueteId = $data['enquete_id'];
-        
-        // Retirer enquete_id des données pour ne pas causer MassAssignmentException
-        unset($data['enquete_id']);
-        
-        $repondant = $this->repondantRepository->create($data);
-        
-        // Attacher l'enquete via la relation many-to-many
-        $repondant->enquetes()->attach($enqueteId);
-        
-        return response()->json([
-            "message"=> "repondant crée avec succès",
-            "repondant"=> $repondant
-            ], 201);
+{
+    $data = $request->validated();
+    $enqueteId = $data['enquete_id'];
+    unset($data['enquete_id']);
+
+    // Réutiliser le repondant existant si la session existe déjà
+    $repondant = \App\Models\Repondant::firstOrCreate(
+        ['session_id' => $data['session_id']],
+        $data
+    );
+
+    // Attacher l'enquête seulement si pas déjà attachée
+    if (!$repondant->enquetes()->where('enquete_id', $enqueteId)->exists()) {
+        $repondant->enquetes()->attach($enqueteId, [
+            'id' => Str::uuid(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
+
+    return response()->json([
+        "message" => "repondant crée avec succès",
+        "repondant" => $repondant
+    ], 201);
+}
 
 
     public function show(string $id)

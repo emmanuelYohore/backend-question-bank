@@ -3,9 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class ModaliteReponse extends Model
 {
+    use HasUuids;
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $table = 'modalite_reponses';
     protected $fillable = ['format_reponse_id', 'item_id', 'intitule', 'v1', 'v2'];
 

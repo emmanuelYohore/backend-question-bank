@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bank_item_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('bank_item_id')->constrained('bank_items')->onDelete('cascade');
+            $table->foreignUuid('item_id')->constrained('items')->onDelete('cascade');
             $table->integer('ordre')->nullable();
             $table->timestamps();          
             $table->unique(['bank_item_id', 'item_id']);

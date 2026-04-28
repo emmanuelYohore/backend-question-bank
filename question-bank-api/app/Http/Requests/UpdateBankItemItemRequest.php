@@ -22,8 +22,8 @@ class UpdateBankItemItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bank_item_id' => 'sometimes|integer|exists:bank_items,id',
-            'item_id' => 'sometimes|integer|exists:items,id',
+            'bank_item_id' => 'sometimes|exists:bank_items,id',
+            'item_id' => 'sometimes|exists:items,id',
             'ordre' => 'sometimes|integer|min:0',
 
         ];

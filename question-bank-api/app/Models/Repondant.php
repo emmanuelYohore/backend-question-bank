@@ -3,9 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Repondant extends Model
 {
+    use HasUuids;
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $table = 'repondants';
     protected $fillable = ['session_id','started_at','completed_at'];
 

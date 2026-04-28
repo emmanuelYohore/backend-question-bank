@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('enquete_banks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('enquete_id')->constrained('enquetes')->onDelete('cascade');
-            $table->foreignId('bank_item_id')->constrained('bank_items')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('enquete_id')->constrained('enquetes')->onDelete('cascade');
+            $table->foreignUuid('bank_item_id')->constrained('bank_items')->onDelete('cascade');
             $table->string('mode')->default('systematique');
             $table->integer('ordre')->nullable();
             $table->unique(['enquete_id', 'bank_item_id']);

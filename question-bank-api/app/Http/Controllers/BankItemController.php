@@ -9,6 +9,7 @@ use App\Models\BankItem;
 use App\Repositories\Interfaces\BankItemRepositoryInterface;
 use BankItemException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BankItemController extends Controller
@@ -111,7 +112,7 @@ class BankItemController extends Controller
     {
         $data = $request->validate([
             'ordered_item_ids' => 'required|array',
-            'ordered_item_ids.*' => 'integer|exists:items,id',
+            'ordered_item_ids.*' => 'uuid|exists:items,id',
         ]);
 
         $orderedItemIds = $data['ordered_item_ids'];
@@ -120,9 +121,14 @@ class BankItemController extends Controller
                             ->where('id', $bankItemId)
                             ->firstOrFail();
 
+        $attachedItemIds = $bankItem->items()->pluck('items.id')->toArray();
+
         $syncData = [];
         foreach ($orderedItemIds as $index => $itemId) {
             $syncData[$itemId] = ['ordre' => $index + 1];
+            if (!in_array($itemId, $attachedItemIds, true)) {
+                $syncData[$itemId]['id'] = (string) Str::uuid();
+            }
         }
 
         $bankItem->items()->syncWithoutDetaching($syncData);
@@ -143,14 +149,14 @@ class BankItemController extends Controller
     {
         $bank = BankItem::findOrFail($bankItemId);
 
-        if ($bank->user_id !== (int)$userId) {
+        if ($bank->user_id !== $userId) {
             return response()->json([
                 'error' => 'Vous n\'êtes pas autorisé à ajouter des items à cette bank'
             ], 403);
         }
 
         $authenticatedUser = JWTAuth::parseToken()->authenticate();
-        if ($authenticatedUser->id !== (int)$userId) {
+        if ($authenticatedUser->id !== $userId) {
             return response()->json([
                 'error' => 'Vous ne pouvez ajouter des items qu\'à vos propres banks'
             ], 403);
@@ -168,10 +174,20 @@ class BankItemController extends Controller
                     'error' => 'Vous ne pouvez pas ajouter d\'items archivés à cette bank'
                 ], 400);
             }
-        
-        $bank->items()->syncWithoutDetaching($data['item_ids']);
-        
-        $attachedItems = $bank->items()->whereIn('items.id', $data['item_ids'])->get();
+
+        $existingItemIds = $bank->items()->pluck('items.id')->toArray();
+        $newItemIds = collect($data['item_ids'])->diff($existingItemIds)->values()->all();
+
+        $attachData = [];
+        foreach ($newItemIds as $itemId) {
+            $attachData[$itemId] = ['id' => (string) Str::uuid()];
+        }
+
+        if (!empty($attachData)) {
+            $bank->items()->attach($attachData);
+        }
+
+        $attachedItems = $bank->items()->whereIn('items.id', $newItemIds ?: $data['item_ids'])->get();
         
         return response()->json([
             'message' => 'Items ajoutés à la bank avec succès',
@@ -188,14 +204,14 @@ class BankItemController extends Controller
     {
         $bank = BankItem::findOrFail($bankItemId);
 
-        if ($bank->user_id !== (int)$userId) {
+        if ($bank->user_id !== $userId) {
             return response()->json([
                 'error' => 'Vous n\'êtes pas autorisé à retirer des items de cette bank'
             ], 403);
         }
 
         $authenticatedUser = JWTAuth::parseToken()->authenticate();
-        if ($authenticatedUser->id !== (int)$userId) {
+        if ($authenticatedUser->id !== $userId) {
             return response()->json([
                 'error' => 'Vous ne pouvez retirer des items qu\'à vos propres banks'
             ], 403);
