@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+
 class BankItemController extends Controller
 {
     protected $bankItemRepository;
@@ -22,9 +23,6 @@ class BankItemController extends Controller
          $this->bankItemRepository = $bankItemRepository;
     }
 
-    /**
-     * Récupère tous les bank items et recherche par nom de bank item
-     */
     public function index(Request $request)
     {
         $query = BankItem::query();
@@ -35,9 +33,7 @@ class BankItemController extends Controller
         
     }
 
-    /**
-     * Crée une nouvelle bank item
-     */
+    
     public function store(StoreBankItemRequest $request)
     {
         $data = $request->validated();
@@ -50,9 +46,7 @@ class BankItemController extends Controller
             ], 201);
     }
 
-    /**
-     * Récupère une bank item en fonction de son id
-     */
+    
     public function show(string $id)
     {
         try {
@@ -64,18 +58,14 @@ class BankItemController extends Controller
         }
     }
 
-    /**
-     * Récupère un bank item avec ses items associés pour un userId
-     */
+    
     public function getOneBankItemForUserId(string $userId, string $bankItemId)
     {
         return response()->json($this->bankItemRepository->getOneBankItemForUserId($userId, $bankItemId));
 
     }
 
-    /**
-     * Récupère tous les bank items avec leurs items associés pour un userId  et recherche par nom de bank item
-     */
+    
     public function getAllBankItemForUserId(string $userId, Request $request)
     {
         $query = BankItem::where('user_id', $userId)->with(['items' => function ($q) {
@@ -91,9 +81,7 @@ class BankItemController extends Controller
         return response()->json($query->get(), 200);
     }
        
-    /**
-     * Met à jour une bank item en fonction de son id
-     */
+   
     public function update(UpdateBankItemRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -105,9 +93,7 @@ class BankItemController extends Controller
         ], 200);
     }
 
-    /**
-     * Persists the order of  items for an bank
-     */
+    
     public function saveItemsOrder(Request $request, string $userId, string $bankItemId)
     {
         $data = $request->validate([
@@ -142,9 +128,6 @@ class BankItemController extends Controller
 
     }
 
-    /**
-     * Ajoute des items à une bank item pour un userId donné
-     */
     public function attachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)
     {
         $bank = BankItem::findOrFail($bankItemId);
@@ -197,9 +180,6 @@ class BankItemController extends Controller
         ], 200);
     }
 
-    /**
-     * Retire des items d'une bank item pour un userId donné
-     */
     public function detachItems(AttachItemsToBankRequest $request, string $userId, string $bankItemId)
     {
         $bank = BankItem::findOrFail($bankItemId);

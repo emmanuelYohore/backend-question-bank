@@ -9,8 +9,8 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use UserException;
-
+use App\Exceptions\UserException;
+use UserException as GlobalUserException;
 class UserController extends Controller
 {
     protected $userRepository;
@@ -32,7 +32,7 @@ class UserController extends Controller
             $query->where('email', 'like', "%{$search}%");
         }
             return response()->json($this->userRepository->getAll());
-        } catch (UserException $e) {
+        } catch (GlobalUserException $e) {
             return response()->json([
                 "message" => $e->notUsersMessage()
             ], 404);
@@ -50,7 +50,7 @@ class UserController extends Controller
         try {
             $user = $this->userRepository->create($data);
             $token = JWTAuth::fromUser($user);
-        } catch (UserException $e) {
+        } catch (GlobalUserException $e) {
             return response()->json([
                 'message' => $e->notCreateUserMessage()
                 ], 500);
@@ -70,7 +70,7 @@ class UserController extends Controller
     {
         try {
             return response()->json($this->userRepository->getById($id));
-        } catch (UserException $e) {
+        } catch (GlobalUserException $e) {
             return response()->json([
                 "message" => $e->notUserIdMessage()
             ], 404);
@@ -93,7 +93,7 @@ class UserController extends Controller
                 "message" => "User Updated.",
                 "user" => $user
             ], 200);
-        } catch (UserException $e) {
+        } catch (GlobalUserException $e) {
             return response()->json([
                 "message" => $e->notUpdateUserMessage()
             ]);
@@ -110,7 +110,7 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'User deleted'
             ]);
-        } catch (UserException $e) {
+        } catch (GlobalUserException $e) {
             return response()->json([
                 "message" => $e->notDeleteUserMessage()
             ]);

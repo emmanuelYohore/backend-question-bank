@@ -7,16 +7,13 @@ use App\Http\Requests\StoreUserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+
 class AuthController extends Controller
 {
      public function __construct(
         private UserRepositoryInterface $userRepository
     ) {}
 
-
-    /**
-     * Enregistre un nouvel utilisateur et génère un token JWT pour l'authentification.
-     */
     public function register(StoreUserRequest $request)
     {
         $data = $request->validated(); 
@@ -38,9 +35,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * Authentifie un utilisateur existant et génère un token JWT pour l'authentification.
-     */
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
@@ -61,9 +55,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Rafraîchit le token JWT de l'utilisateur authentifié.
-     */
     public function refreshToken()  {
         try {
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
@@ -87,9 +78,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Déconnecte l'utilisateur en invalidant son token JWT.
-     */
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
@@ -99,9 +87,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Récupère les informations de l'utilisateur authentifié à partir du token JWT.
-     */
     public function me()
     {
         try {

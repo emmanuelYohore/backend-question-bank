@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreReponseRequest;
 use App\Http\Requests\UpdateReponseRequest;
 use App\Repositories\Interfaces\ReponseRepositoryInterface;
-
 class ReponseController extends Controller
 {
     protected $reponseRepository;
@@ -47,7 +46,6 @@ class ReponseController extends Controller
          return response()->json($this->reponseRepository->getById($id));
     }
 
-    
     public function update(UpdateReponseRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -59,7 +57,6 @@ class ReponseController extends Controller
         ], 200);
     }
 
-   
     public function destroy(string $id)
     {
         try {

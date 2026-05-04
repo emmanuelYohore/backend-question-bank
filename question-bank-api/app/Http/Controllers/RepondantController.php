@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Requests\StoreRepondantRequest;
 use App\Http\Requests\UpdateRepondantRequest;
 use App\Repositories\Interfaces\RepondantRepositoryInterface;
 use Illuminate\Support\Str;
-
 class RepondantController extends Controller
 {
     protected $repondantRepository;
@@ -71,7 +69,6 @@ class RepondantController extends Controller
         ], 200);
     }
 
-   
     public function destroy(string $id)
     {
         try {

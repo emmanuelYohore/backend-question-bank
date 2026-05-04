@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBankItemItemRequest;
 use App\Http\Requests\UpdateBankItemItemRequest;
 use App\Repositories\Interfaces\BankItemItemRepositoryInterface;
-
 class BankItemItemController extends Controller
 {
     protected $bankItemItemRepository;
@@ -15,17 +14,11 @@ class BankItemItemController extends Controller
          $this->bankItemItemRepository = $bankItemItemRepository;
     }
 
-    /**
-     * Récupère tous les bank item items
-     */
     public function index()
     {
         return response()->json($this->bankItemItemRepository->getAll());
     }
 
-    /**
-     * Crée un nouveau bank item item
-     */
     public function store(StoreBankItemItemRequest $request)
     {
         $data = $request->validated();
@@ -57,7 +50,6 @@ $bankItemItem = $this->bankItemItemRepository->create(
         ], 200);
     }
 
-   
     public function destroy(string $id)
     {
         try {

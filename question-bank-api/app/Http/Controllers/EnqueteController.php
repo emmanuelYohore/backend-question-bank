@@ -21,9 +21,6 @@ class EnqueteController extends Controller
          $this->enqueteRepository = $enqueteRepository;
     }
 
-    /**
-     * Récupère toutes les enquêtes et recherche par titre d'enquête
-     */
     public function index(Request $request)
     {
         $query = Enquete::query();
@@ -33,9 +30,6 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
-    /**
-     * Crée une nouvelle enquête
-     */
     public function store(StoreEnqueteRequest $request)
     {
         $data = $request->validated();
@@ -50,17 +44,11 @@ class EnqueteController extends Controller
             ], 201);
     }
 
-    /**
-     * Récupère une enquête en fonction de son id
-     */
     public function show(string $id)
     {
          return response()->json($this->enqueteRepository->getById($id));
     }
 
-    /**
-     * Récupère une enquête par son URL (accès anonyme)
-     */
     public function getByUrl(string $url)
     {
         $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
@@ -70,18 +58,12 @@ class EnqueteController extends Controller
         return response()->json($enquete);
     }
 
-    /**
-     * Récupère une enquête avec ses bank items associés pour un userId
-     */
     public function getOneEnqueteForUserId(string $userId, string $enqueteId)
     {
         return response()->json($this->enqueteRepository->getOneEnqueteForUserId($userId, $enqueteId));
 
     }
 
-    /**
-     * Récupère toutes les enquêtes avec leurs bank items associés pour un userId et recherche par titre d'enquête
-     */
     public function getAllEnqueteForUserId(string $userId, Request $request)
     {
         $query = Enquete::where('user_id', $userId);
@@ -93,9 +75,6 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
-    /**
-     * Ajoute des bank items à une enquête pour un userId
-     */
     public function attachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -146,9 +125,6 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
         ], 200);
     }
 
-    /**
-     * Persists the order of bank items for an enquete
-     */
     public function saveBankItemsOrder(Request $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -168,7 +144,7 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
 
         $data = $request->validate([
             'bank_item_ids' => 'required|array',
-            'bank_item_ids.*' => 'integer|exists:bank_items,id',
+            'bank_item_ids.*' => 'string|uuid|exists:bank_items,id',
         ]);
 
         foreach ($data['bank_item_ids'] as $index => $bankItemId) {
@@ -187,9 +163,38 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
         ], 200);
     }
 
-    /**
-     * Met à jour une enquête en fonction de son id
-     */
+    public function detachBankItems(Request $request, string $userId, string $enqueteId)
+    {
+        $enquete = Enquete::findOrFail($enqueteId);
+
+        if ($enquete->user_id !== $userId) {
+            return response()->json([
+                'error' => 'Vous n\'êtes pas autorisé à modifier les banques de cette enquête'
+            ], 403);
+        }
+
+        $authenticatedUser = JWTAuth::parseToken()->authenticate();
+        if ($authenticatedUser->id !== $userId) {
+            return response()->json([
+                'error' => 'Vous ne pouvez modifier les banques d\'items qu\'à vos propres enquêtes'
+            ], 403);
+        }
+
+        $data = $request->validate([
+            'bank_item_ids' => 'required|array',
+            'bank_item_ids.*' => 'string|uuid|exists:bank_items,id',
+        ]);
+
+        $enquete->bankItems()->detach($data['bank_item_ids']);
+
+        return response()->json([
+            'message' => 'Banques d\'items supprimées de l\'enquête avec succès',
+            'enquete_id' => $enquete->id,
+            'user_id' => $userId,
+            'detached_bank_item_ids' => $data['bank_item_ids']
+        ], 200);
+    }
+
     public function update(UpdateEnqueteRequest $request, string $id)
     {   
         $data = $request->validated();
@@ -202,10 +207,6 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
         ], 200);
     }
 
-   
-    /**
-     * Supprime une enquête en fonction de son id
-     */
     public function destroy(string $id)
     {
         $this->enqueteRepository->delete($id);
@@ -214,9 +215,6 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
             ]);
     }
 
-    /**
-     * Récupère toutes les réponses d'une enquête
-     */
     public function getReponsesByEnquete(string $enqueteId)
     {
         try {

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEnqueteBankRequest;
 use App\Http\Requests\UpdateEnqueteBankRequest;
 use App\Repositories\Interfaces\EnqueteBankRepositoryInterface;
-
-
 class EnqueteBankController extends Controller
 {
     protected $enqueteBankRepository;
@@ -50,7 +48,6 @@ class EnqueteBankController extends Controller
         ], 200);
     }
 
-   
     public function destroy(string $id)
     {
         try {

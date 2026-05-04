@@ -8,7 +8,6 @@ use App\Models\Item;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
 class ItemController extends Controller
 {
     protected $itemRepository;
@@ -19,9 +18,6 @@ class ItemController extends Controller
          $this->itemRepository = $itemRepository;
     }
 
-    /**
-     * Récupère tous les items et recherche par question
-     */
     public function index(Request $request)
     {
         $query = Item::query()->with('formatReponse', 'modaliteReponses');
@@ -31,9 +27,6 @@ class ItemController extends Controller
         return response()->json($query->get());
     }
 
-    /**
-     * Crée un nouvel item
-     */
     public function store(StoreItemRequest $request)
     {
         $data = $request->validated();
@@ -46,26 +39,17 @@ class ItemController extends Controller
             ], 201);
     }
 
-    /**
-     * Récupère un item en fonction de son id
-     */
     public function show(string $id)
     {
          return response()->json($this->itemRepository->getById($id));
     }
 
-    /**
-     * Récupère un item avec son format de réponse et ses modalités associés pour un userId donné
-     */
     public function getOneItemForUserId(string $userId, string $itemId)
     {
         return response()->json($this->itemRepository->getOneItemForUserId($userId, $itemId));
 
     }
 
-    /**
-     * Récupère tous les items avec leur format de réponse et leurs modalités associés pour un userId donné
-     */
     public function getAllItemForUserId(string $userId, Request $request)
     {
         $query = Item::where('user_id', $userId)->with('formatReponse', 'modaliteReponses');
@@ -77,9 +61,6 @@ class ItemController extends Controller
         return response()->json($query->get());
     }
     
-    /**
-     * Met à jour un item en fonction de son id
-     */
     public function update(UpdateItemRequest $request, string $id)
     {   
         $data = $request->validated();       
@@ -91,9 +72,6 @@ class ItemController extends Controller
         ], 200);
     }
 
-   /**
-    * Supprime un item en fonction de son id
-    */
     public function destroy(string $id)
     {
         try {
