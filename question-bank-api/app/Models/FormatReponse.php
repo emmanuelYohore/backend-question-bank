@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Enums\FormatReponseType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FormatReponse extends Model
 {
+    use HasFactory;
     use HasUuids;
 
     protected $keyType = 'string';

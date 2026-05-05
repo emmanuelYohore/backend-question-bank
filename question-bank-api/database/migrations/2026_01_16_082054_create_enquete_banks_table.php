@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('enquete_id')->constrained('enquetes')->onDelete('cascade');
             $table->foreignUuid('bank_item_id')->constrained('bank_items')->onDelete('cascade');
-            $table->enum('mode', array_column(ModeType::cases(), 'value'))->default(ModeType::SYSTEMATIQUE->value);
             $table->integer('ordre')->nullable();
             $table->unique(['enquete_id', 'bank_item_id']);
             $table->timestamps();

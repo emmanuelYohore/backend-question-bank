@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ModeType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -16,10 +17,11 @@ class BankItem extends Model
     public $incrementing = false;
 
     protected $table = 'bank_items';
-    protected $fillable = ['user_id','name','archived'];
+    protected $fillable = ['user_id','name', 'mode', 'archived'];
 
     protected $casts = [
         'archived' => 'boolean',
+        'mode' => ModeType::class,
     ];
 
     public function user()

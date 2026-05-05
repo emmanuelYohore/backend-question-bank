@@ -55,6 +55,14 @@ class EnqueteController extends Controller
             ->with(['bankItems.items.formatReponse', 'bankItems.items.modaliteReponses'])
             ->firstOrFail();
 
+        // Mélanger les items si le mode de la banque est aléatoire
+        foreach ($enquete->bankItems as $bankItem) {
+            if ($bankItem->mode === 'aleatoire' || $bankItem->mode->value === 'aleatoire') {
+                $items = $bankItem->items->shuffle();
+                $bankItem->setRelation('items', $items);
+            }
+        }
+
         return response()->json($enquete);
     }
 

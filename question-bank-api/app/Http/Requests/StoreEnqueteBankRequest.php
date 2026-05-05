@@ -25,7 +25,6 @@ class StoreEnqueteBankRequest extends FormRequest
             'enquete_id' => 'required|exists:enquetes,id',
             'bank_item_id'      => 'required|exists:bank_items,id',
             'ordre' => 'sometimes|integer|min:0',
-            'mode' => 'required|string|in:systematique,random',
             
         ];
     }

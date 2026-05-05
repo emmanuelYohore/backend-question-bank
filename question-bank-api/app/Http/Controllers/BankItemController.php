@@ -38,6 +38,7 @@ class BankItemController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = JWTAuth::parseToken()->authenticate()->id;
+        $data['mode'] = $data['mode'] ?? 'systematique';
         
         $bankItem = $this->bankItemRepository->create($data);
         return response()->json([
