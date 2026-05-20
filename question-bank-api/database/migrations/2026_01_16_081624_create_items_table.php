@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignUuid('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->string('question')->nullable(false);
             $table->boolean('obligatoire')->default(true);
+            $table->string('name_variable_export')->nullable(false);
             $table->boolean('archived')->default(false);
 
 

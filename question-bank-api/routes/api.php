@@ -77,6 +77,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('v1/users/{userId}/items/{itemId}', 'getOneItemForUserId');
         Route::get('v1/users/{userId}/items', 'getAllItemForUserId');
+        Route::post('v1/items/{itemId}/modalite-reponses/order', 'saveModaliteReponsesOrder');
 
         
 

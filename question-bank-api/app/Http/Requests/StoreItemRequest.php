@@ -26,6 +26,7 @@ class StoreItemRequest extends FormRequest
             'format_reponse_id' => 'required|exists:format_reponses,id',
             'question'          => 'required|string|max:255',
             'obligatoire'       => 'sometimes|boolean',
+            'name_variable_export' => 'required|string|max:255',
             'archived'         => 'sometimes|boolean',
         ];
     }

@@ -49,12 +49,17 @@ class EnqueteController extends Controller
          return response()->json($this->enqueteRepository->getById($id));
     }
 
+    //si l'enquete est archivée on retourne l'enquete est archéivée, sinon on retourne l'enquete avec les items mélangés si le mode de la banque est aléatoire
     public function getByUrl(string $url)
     {
         $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
             ->with(['bankItems.items.formatReponse', 'bankItems.items.modaliteReponses'])
             ->firstOrFail();
-
+    if ($enquete->archived) {
+            return response()->json([
+                'message' => 'Cette enquête est archivée et n\'est plus accessible'
+            ], 410);
+        }
         // Mélanger les items si le mode de la banque est aléatoire
         foreach ($enquete->bankItems as $bankItem) {
             if ($bankItem->mode === 'aleatoire' || $bankItem->mode->value === 'aleatoire') {
@@ -235,11 +240,11 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
                         'enquete_id' => $reponse->enquete_id,
                         'enquete_title' => $reponse->enquete?->title,
                         'repondant' => $reponse->repondant_session_id,
-                        'item_id' => $reponse->item_id,
+                        //'item_id' => $reponse->item_id,
                         'item_question' => $reponse->item?->question,
-                        'modalite_reponse_id' => $reponse->modalite_reponse_id,
+                        //'modalite_reponse_id' => $reponse->modalite_reponse_id,
                         'format_reponse_type' => $reponse->item?->formatReponse?->type,
-                        'modalite_reponse_intitule' => $reponse->modaliteReponse?->intitule,
+                        'valeur_modalite_reponse' => $reponse->modaliteReponse?->intitule,
                         'valeur_texte' => $reponse->valeur_texte,
                         'valeur_evn' => $reponse->valeur_evn,
                         'created_at' => $reponse->created_at,

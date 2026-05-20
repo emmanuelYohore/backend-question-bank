@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
+use App\Models\ModaliteReponse;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -60,6 +61,18 @@ class ItemController extends Controller
         
         return response()->json($query->get());
     }
+
+    public function saveModaliteReponsesOrder(string $itemId, Request $request)
+    {
+        $modaliteReponseIds = $request->input('modaliteReponseIds');
+        $item = Item::findOrFail($itemId);
+        $item->modaliteReponses()->sync($modaliteReponseIds);
+        
+        return response()->json([
+            'message' => 'Ordre des modalité de réponses mis à jour avec succès.'
+        ]);
+    }
+    
     
     public function update(UpdateItemRequest $request, string $id)
     {   

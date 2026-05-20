@@ -47,6 +47,7 @@ class ModaliteReponseController extends Controller
         ], 200);
     }
 
+
     public function destroy(string $id)
     {
         try {

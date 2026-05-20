@@ -25,6 +25,7 @@ class UpdateItemRequest extends FormRequest
             'format_reponse_id' => 'sometimes|exists:format_reponses,id',
             'question'          => 'sometimes|string|max:255',
             'obligatoire'       => 'sometimes|boolean',
+            'name_variable_export' => 'sometimes|string|max:255',
             'archived'         => 'sometimes|boolean',
         ];
     }
