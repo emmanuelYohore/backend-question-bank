@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('v1/auth/register', [AuthController::class, 'register']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);
 Route::post('v1/auth/refreshToken', [AuthController::class, 'refreshToken']);
+Route::post('v1/auth/logout', [AuthController::class, 'logout']);
+
 
 Route::controller(RepondantController::class)->group(function () {
     Route::post('v1/repondants', 'store');
@@ -41,7 +43,6 @@ Route::controller(ReponseController::class)->group(function () {
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::post('v1/auth/logout', [AuthController::class, 'logout']);
     Route::get('v1/auth/me', [AuthController::class, 'me']);
 
     Route::controller(EnqueteController::class)->group(function () {
