@@ -24,8 +24,8 @@ class UpdateModaliteReponseRequest extends FormRequest
        return [
              'format_reponse_id'  => 'sometimes|exists:format_reponses,id',
             'item_id' => 'sometimes|exists:items,id',
-
              'intitule' => 'nullable|string|max:255',
++                'ordre' => 'sometimes|integer|min:0',
              'v1' => 'nullable|string',
              'v2' => 'nullable|string',
         ];

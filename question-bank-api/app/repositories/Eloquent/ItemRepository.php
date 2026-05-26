@@ -6,73 +6,56 @@ use App\Repositories\Interfaces\ItemRepositoryInterface;
 
 class ItemRepository implements ItemRepositoryInterface
 {   
-    /**
-     * Récupère tous les items avec leur format de réponse et leurs modalités associés
-     */
+    
+    private function withRelations()
+    {
+        return [
+            'formatReponse',
+            'modaliteReponses' => fn($q) => $q->orderBy('ordre'),
+            'modaliteReponses.formatReponse',
+        ];
+    }
+
     public function getAll()
     {
-        return Item::with(['formatReponse', 'modaliteReponses.formatReponse'])->get();
+        return Item::with($this->withRelations())->get();
     }
 
-    /**
-     * Récupère un item en fonction de son id avec son format de réponse et ses modalités associés
-     */
     public function getById($id)
     {
-        $itemId = Item::with(['formatReponse', 'modaliteReponses.formatReponse'])->findOrFail($id);
-        if (empty($itemId)) {
-            return "Item pas trouvé";
-        }
-        return $itemId;
+        return Item::with($this->withRelations())->findOrFail($id);
     }
 
-    /**
-     * Récupère un item avec son format de réponse et ses modalités associés pour un userId donné
-     */
-    public function getOneItemForUserId($userId, $ItemId)
+    public function getOneItemForUserId($userId, $itemId)
     {
-        return Item::with(['formatReponse', 'modaliteReponses.formatReponse'])
-                    ->where('user_id', $userId)
-                    ->where('id', $ItemId)
-                    ->firstOrFail();
+        return Item::with($this->withRelations())
+            ->where('user_id', $userId)
+            ->where('id', $itemId)
+            ->firstOrFail();
     }
-    
-    /**
-     * Récupère tous les items avec leur format de réponse et leurs modalités associés pour un userId donné
-     */
+
     public function getAllItemForUserId($id)
     {
-        return Item::with(['formatReponse', 'modaliteReponses.formatReponse'])
-                ->where('user_id', $id)
-                ->get();
+        return Item::with($this->withRelations())
+            ->where('user_id', $id)
+            ->get();
     }
 
-    /**
-     * Crée un nouvel item
-     */
     public function create(array $data)
     {
         $item = Item::create($data);
-        return $item->load(['formatReponse', 'modaliteReponses.formatReponse']);
+        return $item->load($this->withRelations());
     }
 
-    /**
-     * Met à jour un item en fonction de son id
-     */
     public function update($id, array $data)
     {
         $item = Item::findOrFail($id);
         $item->update($data);
-        return $item->load(['formatReponse', 'modaliteReponses.formatReponse']);
+        return $item->load($this->withRelations());
     }
 
-    /**
-     * Supprime un item en fonction de son id
-     */
     public function delete($id)
     {
         return Item::destroy($id);
     }
 }
-
-?>

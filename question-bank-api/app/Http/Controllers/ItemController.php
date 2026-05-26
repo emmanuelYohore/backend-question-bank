@@ -70,15 +70,23 @@ class ItemController extends Controller
     }
 
     public function saveModaliteReponsesOrder(string $itemId, Request $request)
-    {
-        $modaliteReponseIds = $request->input('modaliteReponseIds');
-        $item = Item::findOrFail($itemId);
-        $item->modaliteReponses()->sync($modaliteReponseIds);
-        
-        return response()->json([
-            'message' => 'Ordre des modalité de réponses mis à jour avec succès.'
-        ]);
+{
+    $modaliteIds = $request->input('modalite_ids'); // correspond au frontend
+
+    if (!is_array($modaliteIds)) {
+        return response()->json(['error' => 'modalite_ids doit être un tableau'], 422);
     }
+
+    foreach ($modaliteIds as $index => $modaliteId) {
+        ModaliteReponse::where('id', $modaliteId)
+            ->where('item_id', $itemId) // sécurité : l'item doit posséder la modalité
+            ->update(['ordre' => $index]);
+    }
+
+    return response()->json([
+        'message' => 'Ordre des modalités de réponses mis à jour avec succès.'
+    ]);
+}
     
     
     public function update(UpdateItemRequest $request, string $id)

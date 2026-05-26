@@ -16,7 +16,7 @@ class ModaliteReponse extends Model
     public $incrementing = false;
 
     protected $table = 'modalite_reponses';
-    protected $fillable = ['format_reponse_id', 'item_id', 'intitule', 'v1', 'v2'];
+    protected $fillable = ['format_reponse_id', 'item_id', 'intitule','ordre', 'v1', 'v2'];
 
     public function formatReponse()
     {

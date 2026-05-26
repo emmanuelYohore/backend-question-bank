@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignUuid('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->foreignUuid('item_id')->constrained('items')->onDelete('cascade');
             $table->string('intitule')->nullable()->default('pas d\'intitulé');
+            $table->unsignedInteger('ordre')->default(0);
+
             $table->string('v1')->nullable();
             $table->string('v2')->nullable();
 
