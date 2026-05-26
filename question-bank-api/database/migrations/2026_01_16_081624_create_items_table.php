@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignUuid('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
             $table->string('question')->nullable(false);
+            $table->integer('min_case_to_check')->nullable(true);
+            $table->integer('max_case_to_check')->nullable(true);
             $table->boolean('obligatoire')->default(true);
             $table->string('name_variable_export')->nullable(false);
             $table->boolean('archived')->default(false);
-
-
             $table->timestamps();
         });
     }

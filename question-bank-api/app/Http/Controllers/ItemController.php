@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ModaliteReponse;
 use App\Repositories\Interfaces\ItemRepositoryInterface;
 use Illuminate\Http\Request;
+use ItemException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 class ItemController extends Controller
 {
@@ -32,12 +33,18 @@ class ItemController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = JWTAuth::parseToken()->authenticate()->id;
-
-        $item = $this->itemRepository->create($data);
-        return response()->json([
-            "message"=> "item crée avec succès",
-            "item"=> $item
-            ], 201);
+        try{
+            $item = $this->itemRepository->create($data);
+            return response()->json([
+                "message"=> "item crée avec succès",
+                "item"=> $item
+                ], 201);
+        }
+        catch (ItemException $th) {
+            return response()->json([
+                "error"=> $th->notCreateItemMessage(),               
+            ], 500);
+        }
     }
 
     public function show(string $id)

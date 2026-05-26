@@ -23,8 +23,10 @@ class UpdateItemRequest extends FormRequest
     {
         return [
             'format_reponse_id' => 'sometimes|exists:format_reponses,id',
-            'question'          => 'sometimes|string|max:255',
-            'obligatoire'       => 'sometimes|boolean',
+            'question'          => 'sometimes|string|max:300',
+            'min_case_to_check' => 'sometimes|integer|min:1',
+            'max_case_to_check' => 'sometimes|integer|min:1',
+            'obligatoire'       => 'sometimes|boolean',          
             'name_variable_export' => 'sometimes|string|max:255',
             'archived'         => 'sometimes|boolean',
         ];
