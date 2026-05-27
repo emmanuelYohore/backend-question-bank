@@ -71,7 +71,7 @@ class ItemController extends Controller
 
     public function saveModaliteReponsesOrder(string $itemId, Request $request)
 {
-    $modaliteIds = $request->input('modalite_ids'); // correspond au frontend
+    $modaliteIds = $request->input('modalite_ids');
 
     if (!is_array($modaliteIds)) {
         return response()->json(['error' => 'modalite_ids doit être un tableau'], 422);
@@ -79,7 +79,7 @@ class ItemController extends Controller
 
     foreach ($modaliteIds as $index => $modaliteId) {
         ModaliteReponse::where('id', $modaliteId)
-            ->where('item_id', $itemId) // sécurité : l'item doit posséder la modalité
+            ->where('item_id', $itemId) 
             ->update(['ordre' => $index]);
     }
 

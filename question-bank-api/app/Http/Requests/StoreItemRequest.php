@@ -25,8 +25,8 @@ class StoreItemRequest extends FormRequest
         return [
             'format_reponse_id' => 'required|exists:format_reponses,id',
             'question'          => 'required|string|max:300',
-            'min_case_to_check' => 'sometimes|integer|min:1',
-            'max_case_to_check' => 'sometimes|integer|min:1',
+            'min_case_to_check'   => 'nullable|integer|min:1',
+            'max_case_to_check'   => 'nullable|integer|min:1',
             'obligatoire'       => 'sometimes|boolean',
             'name_variable_export' => 'required|string|max:255',             
             'archived'         => 'sometimes|boolean',

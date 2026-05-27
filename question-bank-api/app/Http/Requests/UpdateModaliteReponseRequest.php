@@ -26,8 +26,8 @@ class UpdateModaliteReponseRequest extends FormRequest
             'item_id' => 'sometimes|exists:items,id',
              'intitule' => 'nullable|string|max:255',
 +                'ordre' => 'sometimes|integer|min:0',
-             'v1' => 'nullable|string',
-             'v2' => 'nullable|string',
+             'min_value' => 'nullable|string',
+             'max_value' => 'nullable|string',
         ];
     }
 }

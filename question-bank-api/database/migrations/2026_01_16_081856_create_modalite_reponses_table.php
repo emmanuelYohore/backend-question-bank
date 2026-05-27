@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('intitule')->nullable()->default('pas d\'intitulé');
             $table->unsignedInteger('ordre')->default(0);
 
-            $table->string('v1')->nullable();
-            $table->string('v2')->nullable();
+            $table->string('min_value')->nullable();
+            $table->string('max_value')->nullable();
 
             $table->timestamps();
         });
