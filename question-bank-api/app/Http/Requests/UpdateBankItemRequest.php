@@ -23,7 +23,6 @@ class UpdateBankItemRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|string|max:255',
-            'mode' => 'sometimes|string|in:systematique,aleatoire,adaptatif',
             'archived' => 'sometimes|boolean',
             
         ];

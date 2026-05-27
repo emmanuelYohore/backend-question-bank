@@ -51,25 +51,33 @@ class EnqueteController extends Controller
 
     //si l'enquete est archivée on retourne l'enquete est archéivée, sinon on retourne l'enquete avec les items mélangés si le mode de la banque est aléatoire
     public function getByUrl(string $url)
-    {
-        $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
-            ->with(['bankItems.items.formatReponse', 'bankItems.items.modaliteReponses'])
-            ->firstOrFail();
-    if ($enquete->archived) {
-            return response()->json([
-                'message' => 'Cette enquête est archivée et n\'est plus accessible'
-            ], 410);
-        }
-        // Mélanger les items si le mode de la banque est aléatoire
-        foreach ($enquete->bankItems as $bankItem) {
-            if ($bankItem->mode === 'aleatoire' || $bankItem->mode->value === 'aleatoire') {
-                $items = $bankItem->items->shuffle();
-                $bankItem->setRelation('items', $items);
-            }
-        }
+{
+    $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
+        ->with([
+            'bankItems' => function ($query) {
+                $query->withPivot('id', 'mode', 'ordre')
+                      ->orderBy('enquete_banks.ordre');
+            },
+            'bankItems.items.formatReponse',
+            'bankItems.items.modaliteReponses',
+        ])
+        ->firstOrFail();
 
-        return response()->json($enquete);
+    if ($enquete->archived) {
+        return response()->json([
+            'message' => "Cette enquête est archivée et n'est plus accessible"
+        ], 410);
     }
+
+    foreach ($enquete->bankItems as $bankItem) {
+        $mode = $bankItem->pivot->mode; // ← lecture depuis le pivot uniquement
+        if ($mode === 'aleatoire') {
+            $bankItem->setRelation('items', $bankItem->items->shuffle());
+        }
+    }
+
+    return response()->json($enquete);
+}
 
     public function getOneEnqueteForUserId(string $userId, string $enqueteId)
     {

@@ -23,10 +23,8 @@ class BankItemItemController extends Controller
     {
         $data = $request->validated();
         
-$bankItemItem = $this->bankItemItemRepository->create(
-    $data['bank_item_id'],
-    $data['item_ids']
-);
+    $bankItemItem = $this->bankItemItemRepository->create($data);      
+    
         return response()->json([
             "message"=> "bank item item crée avec succès",
             "bankItemItem"=> $bankItemItem

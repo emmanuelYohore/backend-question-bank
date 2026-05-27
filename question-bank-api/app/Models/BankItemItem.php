@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ModeType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
@@ -14,7 +15,8 @@ class BankItemItem extends Model
     public $incrementing = false;
 
     protected $table = 'bank_item_items';
-    protected $fillable = ['bank_item_id','item_id', 'ordre'];
+    protected $fillable = ['bank_item_id','item_id','ordre'];
+
 
     public function bankItem()
     {

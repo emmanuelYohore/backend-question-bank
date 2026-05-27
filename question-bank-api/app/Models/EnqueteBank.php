@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ModeType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
@@ -14,7 +15,12 @@ class EnqueteBank extends Model
     public $incrementing = false;
 
     protected $table = 'enquete_banks';
-    protected $fillable = ['enquete_id','bank_item_id','mode','ordre'];
+    protected $fillable = ['enquete_id','bank_item_id','ordre','mode'];
+
+    //casts
+    protected $casts = [
+        'mode' => ModeType::class,
+    ];
 
     public function enquete()
     {

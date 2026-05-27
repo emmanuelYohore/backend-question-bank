@@ -23,7 +23,8 @@ class EnqueteBankController extends Controller
     public function store(StoreEnqueteBankRequest $request)
     {
         $data = $request->validated();
-        
+        $data['mode'] = $data['mode'] ?? 'systematique';
+
         $enqueteBank = $this->enqueteBankRepository->create($data);
         return response()->json([
             "message"=> "enquete bank crée avec succès",

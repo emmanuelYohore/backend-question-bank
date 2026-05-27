@@ -37,10 +37,12 @@ class Enquete extends Model
     }
 
     public function bankItems()
-    {
-        return $this->belongsToMany(BankItem::class, 'enquete_banks');
-    }
-
+{
+    return $this->belongsToMany(BankItem::class, 'enquete_banks')
+                ->withPivot('id', 'mode', 'ordre')
+                ->withTimestamps()
+                ->orderByPivot('ordre');
+}
     public function enqueteBanks()
     {
         return $this->hasMany(EnqueteBank::class);

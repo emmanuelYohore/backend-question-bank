@@ -44,14 +44,14 @@ class ItemRepository implements ItemRepositoryInterface
     public function create(array $data)
     {
         $item = Item::create($data);
-        return $item->load($this->withRelations());
+        return $item;
     }
 
     public function update($id, array $data)
     {
         $item = Item::findOrFail($id);
         $item->update($data);
-        return $item->load($this->withRelations());
+        return $item;
     }
 
     public function delete($id)

@@ -17,11 +17,10 @@ class BankItem extends Model
     public $incrementing = false;
 
     protected $table = 'bank_items';
-    protected $fillable = ['user_id','name', 'mode', 'archived'];
+    protected $fillable = ['user_id','name', 'archived'];
 
     protected $casts = [
         'archived' => 'boolean',
-        'mode' => ModeType::class,
     ];
 
     public function user()

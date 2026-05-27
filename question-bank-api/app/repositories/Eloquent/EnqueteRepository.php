@@ -5,78 +5,73 @@ use App\Models\Enquete;
 use App\Models\User;
 use App\Repositories\Interfaces\EnqueteRepositoryInterface;
 
-
 class EnqueteRepository implements EnqueteRepositoryInterface
 {
-    /**
-     * Récupère toutes les enquêtes
-     */
     public function getAll()
     {
         return Enquete::all();
     }
 
-    /**
-     * Récupère une enquête en fonction de son id
-     */
     public function getById($id)
     {
-        $enqueteId = Enquete::findOrFail($id);
-        if (empty($enqueteId)) {
-            return "enquête pas trouvé";
-        }
-        return $enqueteId;
+        return Enquete::findOrFail($id);
     }
 
-    /**
-     * Récupère une enquête avec ses bank items associés pour un userId
-     */
     public function getOneEnqueteForUserId($userId, $enqueteId)
     {
-        return Enquete::where('user_id', $userId)
-                      ->where('id', $enqueteId)
-                      ->with(['bankItems' => function ($query) {
-                          $query->withPivot('ordre')
-                                ->orderBy('enquete_banks.ordre')
-                                ->with(['items' => function ($q) {
-                                    $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
-                                        $mq->with('formatReponse');
-                                    }]);
-                                }]);
-                      }])
-                      ->firstOrFail();
+        $enquete = Enquete::where('user_id', $userId)
+            ->where('id', $enqueteId)
+            ->with(['bankItems' => function ($query) {
+                $query->withPivot('id', 'mode', 'ordre')
+                      ->orderBy('enquete_banks.ordre')
+                      ->with(['items' => function ($q) {
+                          $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                              $mq->with('formatReponse')->orderBy('ordre');
+                          }]);
+                      }]);
+            }])
+            ->firstOrFail();
+
+        $enquete->bankItems->transform(function ($bankItem) {
+            $bankItem->enquete_bank_id = $bankItem->pivot->id;
+            $bankItem->mode = $bankItem->pivot->mode;
+            return $bankItem;
+        });
+
+        return $enquete;
     }
 
-    /**
-     * Récupère toutes les enquêtes avec leurs bank items associés pour un userId donné ordonnés par ordre défini dans la table de pivot
-     */
     public function getAllEnqueteForUserId($userId)
     {
-        return User::findOrFail($userId)
-                ->enquetes()
-                ->with(['bankItems' => function ($query) {
-                    $query->withPivot('ordre')
-                          ->orderBy('enquete_banks.ordre')
-                          ->with(['items' => function ($q) {
-                              $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
-                                  $mq->with('formatReponse');
-                              }]);
+        $enquetes = User::findOrFail($userId)
+            ->enquetes()
+            ->with(['bankItems' => function ($query) {
+                $query->withPivot('id', 'mode', 'ordre')
+                      ->orderBy('enquete_banks.ordre')
+                      ->with(['items' => function ($q) {
+                          $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                              $mq->with('formatReponse')->orderBy('ordre');
                           }]);
-                }])
-                ->get();
+                      }]);
+            }])
+            ->get();
+
+        $enquetes->each(function ($enquete) {
+            $enquete->bankItems->transform(function ($bankItem) {
+                $bankItem->enquete_bank_id = $bankItem->pivot->id;
+                $bankItem->mode = $bankItem->pivot->mode;
+                return $bankItem;
+            });
+        });
+
+        return $enquetes;
     }
 
-    /**
-     * Crée une nouvelle enquête
-     */
     public function create(array $data)
     {
         return Enquete::create($data);
     }
 
-    /**
-     * Met à jour une enquête en fonction de son id
-     */
     public function update($id, array $data)
     {
         $enquete = Enquete::findOrFail($id);
@@ -84,13 +79,8 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         return $enquete;
     }
 
-    /**
-     * Supprime une enquête en fonction de son id
-     */
     public function delete($id)
     {
         return Enquete::destroy($id);
     }
 }
-
-?>

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
-            $table->enum('mode', array_column(ModeType::cases(), 'value'))->default(ModeType::SYSTEMATIQUE->value);
             $table->boolean('archived')->default(false);
             $table->timestamps();
         });
