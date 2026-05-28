@@ -55,7 +55,7 @@ class EnqueteController extends Controller
     $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
         ->with([
             'bankItems' => function ($query) {
-                $query->withPivot('id', 'mode', 'ordre')
+                $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
                       ->orderBy('enquete_banks.ordre');
             },
             'bankItems.items.formatReponse',

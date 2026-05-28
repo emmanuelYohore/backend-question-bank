@@ -22,7 +22,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         $enquete = Enquete::where('user_id', $userId)
             ->where('id', $enqueteId)
             ->with(['bankItems' => function ($query) {
-                $query->withPivot('id', 'mode', 'ordre')
+                $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
                       ->orderBy('enquete_banks.ordre')
                       ->with(['items' => function ($q) {
                           $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
@@ -35,6 +35,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         $enquete->bankItems->transform(function ($bankItem) {
             $bankItem->enquete_bank_id = $bankItem->pivot->id;
             $bankItem->mode = $bankItem->pivot->mode;
+            $bankItem->nombre_items_aleatoires = $bankItem->pivot->nombre_items_aleatoires;
             return $bankItem;
         });
 
@@ -46,7 +47,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
         $enquetes = User::findOrFail($userId)
             ->enquetes()
             ->with(['bankItems' => function ($query) {
-                $query->withPivot('id', 'mode', 'ordre')
+                $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
                       ->orderBy('enquete_banks.ordre')
                       ->with(['items' => function ($q) {
                           $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
@@ -60,6 +61,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
             $enquete->bankItems->transform(function ($bankItem) {
                 $bankItem->enquete_bank_id = $bankItem->pivot->id;
                 $bankItem->mode = $bankItem->pivot->mode;
+                $bankItem->nombre_items_aleatoires = $bankItem->pivot->nombre_items_aleatoires;
                 return $bankItem;
             });
         });
