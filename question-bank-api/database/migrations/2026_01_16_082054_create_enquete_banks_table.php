@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignUuid('bank_item_id')->constrained('bank_items')->onDelete('cascade');
             $table->integer('ordre')->nullable();
             $table->enum('mode', array_column(ModeType::cases(), 'value'))->default(ModeType::SYSTEMATIQUE->value);
+            $table->unsignedInteger('nombre_items_aleatoires')->nullable(true);
 
             $table->unique(['enquete_id', 'bank_item_id']);
             $table->timestamps();

@@ -26,6 +26,7 @@ class StoreEnqueteBankRequest extends FormRequest
             'bank_item_id'      => 'required|exists:bank_items,id',
             'ordre' => 'sometimes|integer|min:0',
             'mode' => 'sometimes|string|in:systematique,aleatoire,adaptatif',
+            'nombre_items_aleatoires' => 'nullable|integer|min:1',
             
         ];
     }
