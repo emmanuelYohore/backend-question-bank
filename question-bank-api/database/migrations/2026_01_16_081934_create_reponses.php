@@ -11,16 +11,38 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reponses', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('repondant_id')->constrained('repondants')->onDelete('cascade');
-            $table->foreignUuid('item_id')->constrained('items')->onDelete('cascade');
-            $table->foreignUuid('enquete_id')->constrained('enquetes')->onDelete('cascade');
-            $table->foreignUuid('modalite_reponse_id')->nullable(true)->constrained('modalite_reponses')->onDelete('cascade');
-            $table->string('valeur_texte')->nullable(true);
-            $table->string('valeur_evn')->nullable(true);
-            $table->timestamps();
-        });
+        Schema::create('AQUALI_reponses', function (Blueprint $table) {
+    $table->uuid('id')->primary();
+
+    $table->uuid('repondant_id');
+    $table->foreign('repondant_id')
+          ->references('id')
+          ->on('AQUALI_repondants')
+          ->onDelete('cascade');
+
+    $table->uuid('item_id');
+    $table->foreign('item_id')
+          ->references('id')
+          ->on('AQUALI_items')
+          ->onDelete('cascade');
+
+    $table->uuid('enquete_id');
+    $table->foreign('enquete_id')
+          ->references('id')
+          ->on('AQUALI_enquetes')
+          ->onDelete('cascade');
+
+    $table->uuid('modalite_reponse_id')->nullable();
+    $table->foreign('modalite_reponse_id')
+          ->references('id')
+          ->on('AQUALI_modalite_reponses')
+          ->onDelete('cascade');
+
+    $table->string('valeur_texte')->nullable();
+    $table->string('valeur_evn')->nullable();
+
+    $table->timestamps();
+});
     }
     
     
@@ -29,6 +51,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reponses');
+        Schema::dropIfExists('AQUALI_reponses');
     }
 };

@@ -12,10 +12,9 @@ class Reponse extends Model
     use HasUuids;
 
     protected $keyType = 'string';
-
     public $incrementing = false;
 
-    protected $table = 'reponses';
+    protected $table = 'AQUALI_reponses'; 
 
     protected $fillable = [
         'repondant_id',
@@ -26,22 +25,25 @@ class Reponse extends Model
         'valeur_evn'
     ];
 
-    protected $casts = [
-        'completed'=> 'boolean',
-    ];
+    protected $casts = [];
 
     public function repondant()
     {
-        return $this->belongsTo(Repondant::class);
+        return $this->belongsTo(Repondant::class, 'repondant_id', 'id');
     }
 
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'item_id', 'id');
+    }
+
+    public function enquete()
+    {
+        return $this->belongsTo(Enquete::class, 'enquete_id', 'id');
     }
 
     public function modaliteReponse()
     {
-        return $this->belongsTo(ModaliteReponse::class);
+        return $this->belongsTo(ModaliteReponse::class, 'modalite_reponse_id', 'id');
     }
 }

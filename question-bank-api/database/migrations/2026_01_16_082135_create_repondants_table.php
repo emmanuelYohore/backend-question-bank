@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('repondants', function (Blueprint $table) {
+        Schema::create('AQUALI_repondants', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('session_id')->unique()->nullable(false);
             $table->timestamp('started_at')->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('repondants');
+        Schema::dropIfExists('AQUALI_repondants');
     }
 };

@@ -14,33 +14,30 @@ class User extends Authenticatable implements JWTSubject
     use HasUuids;
 
     protected $keyType = 'string';
-
     public $incrementing = false;
 
-    protected $table = 'users';
+    protected $table = 'AQUALI_users';
 
     protected $fillable = ['name', 'surname', 'email', 'password', 'role'];
-
     protected $hidden = ['password'];
 
     protected $casts = [
-    'role' => RoleType::class,
+        'role' => RoleType::class,
     ];
-
 
     public function enquetes()
     {
-        return $this->hasMany(Enquete::class);
+        return $this->hasMany(Enquete::class, 'user_id', 'id');
     }
 
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->hasMany(Item::class, 'user_id', 'id');
     }
 
     public function bankItems()
     {
-        return $this->hasMany(BankItem::class);
+        return $this->hasMany(BankItem::class, 'user_id', 'id');
     }
 
     public function getJWTIdentifier()

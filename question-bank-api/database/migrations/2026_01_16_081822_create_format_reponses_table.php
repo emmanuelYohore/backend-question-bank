@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('format_reponses', function (Blueprint $table) {
+        Schema::create('AQUALI_format_reponses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->enum('type',array_column(FormatReponseType::cases(), 'value'))->default(FormatReponseType::TEXTE->value);
             $table->timestamps();
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('format_reponses');
+        Schema::dropIfExists('AQUALI_format_reponses');
     }
 };

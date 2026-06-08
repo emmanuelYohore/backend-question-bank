@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,10 +11,9 @@ class Enquete extends Model
     use HasUuids;
 
     protected $keyType = 'string';
-
     public $incrementing = false;
 
-    protected $table = 'enquetes';
+    protected $table = 'AQUALI_enquetes';
 
     protected $fillable = [
         'user_id',
@@ -33,24 +31,24 @@ class Enquete extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function bankItems()
-{
-    return $this->belongsToMany(BankItem::class, 'enquete_banks')
-                ->withPivot('id', 'mode', 'ordre')
-                ->withTimestamps()
-                ->orderByPivot('ordre');
-}
+    {
+        return $this->belongsToMany(BankItem::class, 'AQUALI_enquete_banks')
+                    ->withPivot('id', 'mode', 'ordre')
+                    ->withTimestamps()
+                    ->orderByPivot('ordre');
+    }
+
     public function enqueteBanks()
     {
-        return $this->hasMany(EnqueteBank::class);
+        return $this->hasMany(EnqueteBank::class, 'enquete_id', 'id');
     }
 
     public function repondants()
     {
-        return $this->belongsToMany(Repondant::class, 'enquete_repondants');
+        return $this->belongsToMany(Repondant::class, 'AQUALI_enquete_repondants');
     }
 }
-

@@ -12,11 +12,10 @@ class Repondant extends Model
     use HasUuids;
 
     protected $keyType = 'string';
-
     public $incrementing = false;
 
-    protected $table = 'repondants';
-    protected $fillable = ['session_id','started_at','completed_at'];
+    protected $table = 'AQUALI_repondants';
+    protected $fillable = ['session_id', 'started_at', 'completed_at'];
 
     protected $casts = [
         'started_at' => 'datetime',
@@ -25,11 +24,11 @@ class Repondant extends Model
 
     public function enquetes()
     {
-        return $this->belongsToMany(Enquete::class, 'enquete_repondants');
+        return $this->belongsToMany(Enquete::class, 'AQUALI_enquete_repondants');
     }
 
     public function reponses()
     {
-        return $this->hasMany(Reponse::class);
+        return $this->hasMany(Reponse::class, 'repondant_id', 'id');
     }
 }

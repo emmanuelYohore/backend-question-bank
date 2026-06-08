@@ -11,15 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enquete_repondants', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('enquete_id')->constrained('enquetes')->cascadeOnDelete();
-            $table->foreignUuid('repondant_id')->constrained('repondants')->cascadeOnDelete();
-            $table->timestamps();
+       Schema::create('AQUALI_enquete_repondants', function (Blueprint $table) {
+    $table->uuid('id')->primary();
 
-            // Unique constraint to prevent duplicate entries
-            $table->unique(['enquete_id', 'repondant_id']);
-        });
+    $table->uuid('enquete_id');
+    $table->foreign('enquete_id')
+          ->references('id')
+          ->on('AQUALI_enquetes')
+          ->onDelete('cascade');
+
+    $table->uuid('repondant_id');
+    $table->foreign('repondant_id')
+          ->references('id')
+          ->on('AQUALI_repondants')
+          ->onDelete('cascade');
+
+    $table->unique(['enquete_id', 'repondant_id']);
+
+    $table->timestamps();
+});
     }
 
     /**
@@ -27,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enquete_repondants');
+        Schema::dropIfExists('AQUALI_enquete_repondants');
     }
 };

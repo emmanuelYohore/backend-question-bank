@@ -12,13 +12,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enquete_banks', function (Blueprint $table) {
+        Schema::create('AQUALI_enquete_banks', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('enquete_id')->constrained('enquetes')->onDelete('cascade');
-            $table->foreignUuid('bank_item_id')->constrained('bank_items')->onDelete('cascade');
+
+            $table->uuid('enquete_id');
+            $table->foreign('enquete_id')
+                ->references('id')
+                ->on('AQUALI_enquetes')
+                ->onDelete('cascade');
+
+            $table->uuid('bank_item_id');
+            $table->foreign('bank_item_id')
+                ->references('id')
+                ->on('AQUALI_bank_items')
+                ->onDelete('cascade');
+
             $table->integer('ordre')->nullable();
-            $table->enum('mode', array_column(ModeType::cases(), 'value'))->default(ModeType::SYSTEMATIQUE->value);
-            $table->unsignedInteger('nombre_items_aleatoires')->nullable(true);
+            $table->enum('mode', array_column(ModeType::cases(), 'value'))
+                ->default(ModeType::SYSTEMATIQUE->value);
+            $table->unsignedInteger('nombre_items_aleatoires')->nullable();
 
             $table->unique(['enquete_id', 'bank_item_id']);
             $table->timestamps();
@@ -30,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enquete_banks');
+        Schema::dropIfExists('AQUALI_enquete_banks');
     }
 };

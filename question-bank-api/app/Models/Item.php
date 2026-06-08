@@ -12,12 +12,20 @@ class Item extends Model
     use HasUuids;
 
     protected $keyType = 'string';
-
     public $incrementing = false;
 
-    protected $table = 'items';
+    protected $table = 'AQUALI_items'; // ✅ Corrigé
 
-    protected $fillable = ['user_id', 'format_reponse_id','question', 'min_case_to_check', 'max_case_to_check', 'obligatoire', 'nom_court', 'archived'];
+    protected $fillable = [
+        'user_id',
+        'format_reponse_id',
+        'question',
+        'min_case_to_check',
+        'max_case_to_check',
+        'obligatoire',
+        'nom_court',
+        'archived'
+    ];
 
     protected $casts = [
         'obligatoire' => 'boolean',
@@ -26,26 +34,28 @@ class Item extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function bankItems()
     {
-        return $this->belongsToMany(BankItem::class, 'bank_item_items');
+        return $this->belongsToMany(BankItem::class, 'AQUALI_bank_item_items')
+                    ->withPivot('ordre')
+                    ->withTimestamps();
     }
 
     public function formatReponse()
     {
-        return $this->belongsTo(FormatReponse::class);
+        return $this->belongsTo(FormatReponse::class, 'format_reponse_id', 'id');
     }
 
     public function reponses()
     {
-        return $this->hasMany(Reponse::class);
+        return $this->hasMany(Reponse::class, 'item_id', 'id');
     }
 
     public function modaliteReponses()
     {
-        return $this->hasMany(ModaliteReponse::class);
+        return $this->hasMany(ModaliteReponse::class, 'item_id', 'id');
     }
 }

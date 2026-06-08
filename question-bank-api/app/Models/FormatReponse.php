@@ -13,25 +13,23 @@ class FormatReponse extends Model
     use HasUuids;
 
     protected $keyType = 'string';
-
     public $incrementing = false;
 
-    protected $table = "format_reponses";
-    protected $fillable = ["type"] ;
+    protected $table = 'AQUALI_format_reponses';
+
+    protected $fillable = ['type'];
 
     protected $casts = [
-    'type' => FormatReponseType::class,
+        'type' => FormatReponseType::class,
     ];
-
 
     public function items()
     {
-        return $this->hasMany(Item::class, 'format_reponse_id');
+        return $this->hasMany(Item::class, 'format_reponse_id', 'id');
     }
 
     public function modaliteReponses()
     {
-        return $this->hasMany(ModaliteReponse::class);
+        return $this->hasMany(ModaliteReponse::class, 'format_reponse_id', 'id');
     }
-
 }

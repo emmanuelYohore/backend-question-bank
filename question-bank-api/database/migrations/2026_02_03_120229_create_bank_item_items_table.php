@@ -11,14 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bank_item_items', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('bank_item_id')->constrained('bank_items')->onDelete('cascade');
-            $table->foreignUuid('item_id')->constrained('items')->onDelete('cascade');
-            $table->integer('ordre')->nullable();
-            $table->timestamps();          
-            $table->unique(['bank_item_id', 'item_id']);
-        });
+      Schema::create('AQUALI_bank_item_items', function (Blueprint $table) {
+    $table->uuid('id')->primary();
+
+    $table->uuid('bank_item_id');
+    $table->foreign('bank_item_id')
+          ->references('id')
+          ->on('AQUALI_bank_items')
+          ->onDelete('cascade');
+
+    $table->uuid('item_id');
+    $table->foreign('item_id')
+          ->references('id')
+          ->on('AQUALI_items')
+          ->onDelete('cascade');
+
+    $table->integer('ordre')->nullable();
+    $table->unique(['bank_item_id', 'item_id']);
+
+    $table->timestamps();
+});
     }
 
     /**
@@ -26,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bank_item_items');
+        Schema::dropIfExists('AQUALI_bank_item_items');
     }
 };
