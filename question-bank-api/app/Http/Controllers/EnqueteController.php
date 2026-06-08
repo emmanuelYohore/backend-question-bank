@@ -236,35 +236,237 @@ $existingBankItemIds = $enquete->bankItems()->pluck('bank_items.id')->toArray();
             ]);
     }
 
-    public function getReponsesByEnquete(string $enqueteId)
+    // public function getReponsesByEnquete(string $enqueteId)
+    // {
+    //     try {
+    //         $reponses =Reponse::where('enquete_id', $enqueteId)
+    //             ->with(['item', 'modaliteReponse', 'repondant'])
+    //             ->get()
+    //             ->map(function ($reponse) {
+    //                 return [
+    //                     'id' => $reponse->id,
+    //                     'enquete_id' => $reponse->enquete_id,
+    //                     'enquete_title' => $reponse->enquete?->title,
+    //                     'repondant' => $reponse->repondant_session_id,
+    //                     //'item_id' => $reponse->item_id,
+    //                     'item_question' => $reponse->item?->question,
+    //                     //'modalite_reponse_id' => $reponse->modalite_reponse_id,
+    //                     'format_reponse_type' => $reponse->item?->formatReponse?->type,
+    //                     'valeur_modalite_reponse' => $reponse->modaliteReponse?->intitule,
+    //                     'valeur_texte' => $reponse->valeur_texte,
+    //                     'valeur_evn' => $reponse->valeur_evn,
+    //                     'created_at' => $reponse->created_at,
+    //                 ];
+    //             });
+
+    //         return response()->json($reponses, 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Erreur lors de la récupération des réponses',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
+    /**
+     * Export survey responses to CSV format
+     * CSV contains: respondent_id, datetime, item_code1, item_code2, ...
+     */
+    public function exportResponsesToCsv(string $enqueteId)
     {
         try {
-            $reponses =Reponse::where('enquete_id', $enqueteId)
-                ->with(['item', 'modaliteReponse', 'repondant'])
-                ->get()
-                ->map(function ($reponse) {
-                    return [
-                        'id' => $reponse->id,
-                        'enquete_id' => $reponse->enquete_id,
-                        'enquete_title' => $reponse->enquete?->title,
-                        'repondant' => $reponse->repondant_session_id,
-                        //'item_id' => $reponse->item_id,
-                        'item_question' => $reponse->item?->question,
-                        //'modalite_reponse_id' => $reponse->modalite_reponse_id,
-                        'format_reponse_type' => $reponse->item?->formatReponse?->type,
-                        'valeur_modalite_reponse' => $reponse->modaliteReponse?->intitule,
-                        'valeur_texte' => $reponse->valeur_texte,
-                        'valeur_evn' => $reponse->valeur_evn,
-                        'created_at' => $reponse->created_at,
-                    ];
-                });
+            $enquete = Enquete::findOrFail($enqueteId);
 
-            return response()->json($reponses, 200);
+            // Check authorization
+            $authenticatedUser = JWTAuth::parseToken()->authenticate();
+            if ($enquete->user_id !== $authenticatedUser->id) {
+                return response()->json([
+                    'error' => 'Vous n\'êtes pas autorisé à exporter les réponses de cette enquête'
+                ], 403);
+            }
+
+            // Get all items for this survey, maintaining order from bankItems
+            $bankItems = $enquete->bankItems()
+                ->with('items')
+                ->orderByPivot('ordre')
+                ->get();
+            
+            // Build ordered items collection
+            $orderedItems = [];
+            foreach ($bankItems as $bankItem) {
+                foreach ($bankItem->items as $item) {
+                    // Use item ID to avoid duplicates while maintaining order
+                    if (!isset($orderedItems[$item->id])) {
+                        $orderedItems[$item->id] = $item;
+                    }
+                }
+            }
+
+            // Build a mapping of modaliteReponse ID to code for each item
+            // This ensures codes are sequential per item (1, 2, 3...)
+            $modaliteCodeMap = [];
+            foreach ($orderedItems as $item) {
+                $modalites = $item->modaliteReponses()->orderBy('ordre')->get();
+                $code = 1;
+                foreach ($modalites as $modalite) {
+                    $modaliteCodeMap[$modalite->id] = $code;
+                    $code++;
+                }
+            }
+
+            // Get all respondents with their responses
+            $repondants = $enquete->repondants()
+                ->with(['reponses' => function ($query) use ($enqueteId) {
+                    $query->where('enquete_id', $enqueteId)
+                          ->with('modaliteReponse');
+                }])
+                ->get();
+
+            // Build CSV header
+            $header = ['id_rep', 'dateheure'];
+            foreach ($orderedItems as $item) {
+                $header[] = $item->nom_court;
+            }
+
+            // Build CSV data
+            $rows = [];
+            foreach ($repondants as $repondant) {
+                $row = [
+                    $repondant->id,
+                    $repondant->started_at ? $repondant->started_at->format('Y/m/d H:i') : '',
+                ];
+
+                // Add responses for each item
+                foreach ($orderedItems as $item) {
+                    $response = $repondant->reponses->firstWhere('item_id', $item->id);
+                    
+                    if ($response) {
+                        if ($response->modaliteReponse) {
+                            // Use the mapped code for this modalité
+                            $code = $modaliteCodeMap[$response->modaliteReponse->id] ?? '';
+                        } else if ($response->valeur_texte) {
+                            $code = $response->valeur_texte;
+                        } else if ($response->valeur_evn) {
+                            $code = $response->valeur_evn;
+                        } else {
+                            $code = '';
+                        }
+                        $row[] = $code;
+                    } else {
+                        $row[] = '';
+                    }
+                }
+
+                $rows[] = $row;
+            }
+
+            // Generate CSV content
+            $csvContent = $this->generateCsvContent([$header, ...$rows]);
+
+            // Return CSV file download
+            return response($csvContent, 200)
+                ->header('Content-Type', 'text/csv; charset=utf-8')
+                ->header('Content-Disposition', 'attachment; filename="reponses_enquete_' . $enquete->id . '.csv"');
+
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Erreur lors de la récupération des réponses',
+                'message' => 'Erreur lors de l\'export des réponses',
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Export variable details to CSV format
+     * CSV contains: item_code, item_title, modality_code, modality_title
+     */
+    public function exportVariableDetailsToCsv(string $enqueteId)
+    {
+        try {
+            $enquete = Enquete::findOrFail($enqueteId);
+
+            // Check authorization
+            $authenticatedUser = JWTAuth::parseToken()->authenticate();
+            if ($enquete->user_id !== $authenticatedUser->id) {
+                return response()->json([
+                    'error' => 'Vous n\'êtes pas autorisé à exporter les détails des variables de cette enquête'
+                ], 403);
+            }
+
+            // Get all items for this survey, maintaining order from bankItems
+            $bankItems = $enquete->bankItems()
+                ->with('items.modaliteReponses')
+                ->orderByPivot('ordre')
+                ->get();
+            
+            // Build ordered items collection
+            $orderedItems = [];
+            foreach ($bankItems as $bankItem) {
+                foreach ($bankItem->items as $item) {
+                    // Use item ID to avoid duplicates while maintaining order
+                    if (!isset($orderedItems[$item->id])) {
+                        $orderedItems[$item->id] = $item;
+                    }
+                }
+            }
+
+            // Build CSV header
+            $header = ['code_item', 'intitulé_item', 'code_modalité', 'intitulé_modalité'];
+
+            // Build CSV data
+            $rows = [];
+            foreach ($orderedItems as $item) {
+                $modalites = $item->modaliteReponses()->orderBy('ordre')->get();
+
+                // Use a counter for each item to generate sequential codes starting from 1 next 2 etc ... if type of modality is qcm, qcu else code is vide 
+                $code = 1;
+                foreach ($modalites as $modalite) {
+                    $rows[] = [
+                        $item->nom_court,
+                        $item->question,
+                        $modalite->intitule ? $code : '',
+                        $modalite->intitule,
+                    ];
+                    if ($modalite->intitule) {
+                        $code++;
+                    }
+                }
+            }
+
+            // Generate CSV content
+            $csvContent = $this->generateCsvContent([$header, ...$rows]);
+
+            // Return CSV file download
+            return response($csvContent, 200)
+                ->header('Content-Type', 'text/csv; charset=utf-8')
+                ->header('Content-Disposition', 'attachment; filename="variables_enquete_' . $enquete->id . '.csv"');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de l\'export des détails des variables',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Helper function to generate CSV content
+     */
+    private function generateCsvContent(array $rows): string
+    {
+        $output = fopen('php://memory', 'w');
+        
+        // Set UTF-8 BOM for proper encoding in Excel
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        foreach ($rows as $row) {
+            fputcsv($output, $row, ',', '"');
+        }
+
+        rewind($output);
+        $csvContent = stream_get_contents($output);
+        fclose($output);
+
+        return $csvContent;
     }
 }

@@ -17,7 +17,7 @@ class Item extends Model
 
     protected $table = 'items';
 
-    protected $fillable = ['user_id', 'format_reponse_id','question', 'min_case_to_check', 'max_case_to_check', 'obligatoire', 'name_variable_export', 'archived'];
+    protected $fillable = ['user_id', 'format_reponse_id','question', 'min_case_to_check', 'max_case_to_check', 'obligatoire', 'nom_court', 'archived'];
 
     protected $casts = [
         'obligatoire' => 'boolean',

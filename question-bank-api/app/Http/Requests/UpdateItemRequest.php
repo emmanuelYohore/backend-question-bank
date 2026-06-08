@@ -27,7 +27,7 @@ class UpdateItemRequest extends FormRequest
             'min_case_to_check' => 'sometimes|integer|min:1',
             'max_case_to_check' => 'sometimes|integer|min:1',
             'obligatoire'       => 'sometimes|boolean',          
-            'name_variable_export' => 'sometimes|string|max:255',
+            'nom_court' => 'sometimes|string|max:30',
             'archived'         => 'sometimes|boolean',
         ];
     }

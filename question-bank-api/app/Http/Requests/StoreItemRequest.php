@@ -28,7 +28,7 @@ class StoreItemRequest extends FormRequest
             'min_case_to_check'   => 'nullable|integer|min:1',
             'max_case_to_check'   => 'nullable|integer|min:1',
             'obligatoire'       => 'sometimes|boolean',
-            'name_variable_export' => 'required|string|max:255',             
+            'nom_court' => 'required|string|max:30',             
             'archived'         => 'sometimes|boolean',
         ];
     }

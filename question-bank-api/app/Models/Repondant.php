@@ -18,6 +18,11 @@ class Repondant extends Model
     protected $table = 'repondants';
     protected $fillable = ['session_id','started_at','completed_at'];
 
+    protected $casts = [
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
+    ];
+
     public function enquetes()
     {
         return $this->belongsToMany(Enquete::class, 'enquete_repondants');

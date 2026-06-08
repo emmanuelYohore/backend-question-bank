@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('min_case_to_check')->nullable(true);
             $table->integer('max_case_to_check')->nullable(true);
             $table->boolean('obligatoire')->default(true);
-            $table->string('name_variable_export')->nullable(false);
+            $table->string('nom_court', 30)->nullable(false);
             $table->boolean('archived')->default(false);
             $table->timestamps();
         });
