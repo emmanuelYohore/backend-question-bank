@@ -22,8 +22,8 @@ class UpdateModaliteReponseRequest extends FormRequest
     public function rules(): array
     {
        return [
-             'format_reponse_id'  => 'sometimes|exists:format_reponses,id',
-            'item_id' => 'sometimes|exists:items,id',
+             'format_reponse_id'  => 'sometimes|exists:AQUALI_format_reponses,id',
+            'item_id' => 'sometimes|exists:AQUALI_items,id',
              'intitule' => 'nullable|string|max:255',
 +                'ordre' => 'sometimes|integer|min:0',
              'min_value' => 'nullable|string',

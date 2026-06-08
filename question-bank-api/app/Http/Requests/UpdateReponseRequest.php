@@ -22,9 +22,9 @@ class UpdateReponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-          'repondant_id'  => 'sometimes|exists:repondants,id',
-             'item_id'  => 'sometimes|exists:items,id',
-             'modalite_reponse_id'  => 'sometimes|exists:modalite_reponses,id',
+          'repondant_id'  => 'sometimes|exists:AQUALI_repondants,id',
+             'item_id'  => 'sometimes|exists:AQUALI_items,id',
+             'modalite_reponse_id'  => 'sometimes|exists:AQUALI_modalite_reponses,id',
              'valeur_texte'  => 'sometimes|string|max:255',
              'valeur_evn'  => 'sometimes|string'
         ];

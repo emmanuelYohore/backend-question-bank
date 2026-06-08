@@ -23,7 +23,7 @@ class UpdateRepondantRequest extends FormRequest
     {
         return [
             'session_id'      => 'sometimes|string|max:255',
-            'enquete_id' => 'sometimes|exists:enquetes,id',
+            'enquete_id' => 'sometimes|exists:AQUALI_enquetes,id',
             'started_at' => 'sometimes|date',
             'completed_at' => 'sometimes|date'
             

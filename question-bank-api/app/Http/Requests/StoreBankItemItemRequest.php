@@ -22,9 +22,9 @@ class StoreBankItemItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bank_item_id' => 'required|exists:bank_items,id',
+            'bank_item_id' => 'required|exists:AQUALI_bank_items,id',
             'item_ids' => 'required|array',
-            'item_ids.*' => 'exists:items,id',
+            'item_ids.*' => 'exists:AQUALI_items,id',
             'ordre' => 'sometimes|integer|min:0',
             
         ];

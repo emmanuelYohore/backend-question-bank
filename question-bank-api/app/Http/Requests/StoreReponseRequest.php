@@ -13,10 +13,10 @@ class StoreReponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'repondant_id' => 'required|exists:repondants,id',
-            'enquete_id' => 'required|exists:enquetes,id',
-            'item_id' => 'required|exists:items,id',
-            'modalite_reponse_id' => 'nullable|exists:modalite_reponses,id',
+            'repondant_id' => 'required|exists:AQUALI_repondants,id',
+            'enquete_id' => 'required|exists:AQUALI_enquetes,id',
+            'item_id' => 'required|exists:AQUALI_items,id',
+            'modalite_reponse_id' => 'nullable|exists:AQUALI_modalite_reponses,id',
             'valeur_texte' => 'nullable|string',
             'valeur_evn' => 'nullable|string',
         ];

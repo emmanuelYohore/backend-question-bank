@@ -22,8 +22,8 @@ class StoreEnqueteBankRequest extends FormRequest
     public function rules(): array
     {
        return [
-            'enquete_id' => 'required|exists:enquetes,id',
-            'bank_item_id'      => 'required|exists:bank_items,id',
+            'enquete_id' => 'required|exists:AQUALI_enquetes,id',
+            'bank_item_id'      => 'required|exists:AQUALI_bank_items,id',
             'ordre' => 'sometimes|integer|min:0',
             'mode' => 'sometimes|string|in:systematique,aleatoire,adaptatif',
             'nombre_items_aleatoires' => 'nullable|integer|min:1',

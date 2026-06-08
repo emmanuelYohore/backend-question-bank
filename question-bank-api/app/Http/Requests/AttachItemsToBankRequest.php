@@ -23,7 +23,7 @@ class AttachItemsToBankRequest extends FormRequest
     {
        return [
         'item_ids' => 'required|array|min:1',
-        'item_ids.*' => 'uuid|exists:items,id',
+        'item_ids.*' => 'uuid|exists:AQUALI_items,id',
         ];
     }
 }

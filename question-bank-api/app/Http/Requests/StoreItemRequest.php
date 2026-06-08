@@ -23,7 +23,7 @@ class StoreItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'format_reponse_id' => 'required|exists:format_reponses,id',
+            'format_reponse_id' => 'required|exists:AQUALI_format_reponses,id',
             'question'          => 'required|string|max:300',
             'min_case_to_check'   => 'nullable|integer|min:1',
             'max_case_to_check'   => 'nullable|integer|min:1',

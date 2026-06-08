@@ -22,8 +22,8 @@ class UpdateEnqueteBankRequest extends FormRequest
     public function rules(): array
     {
          return [
-            'enquete_id' => 'sometimes|exists:enquetes,id',
-            'bank_item_id' => 'sometimes|exists:bank_items,id',
+            'enquete_id' => 'sometimes|exists:AQUALI_enquetes,id',
+            'bank_item_id' => 'sometimes|exists:AQUALI_bank_items,id',
             'ordre' => 'sometimes|integer|min:0',
             'mode' => 'sometimes|string|in:systematique,aleatoire,adaptatif',
             'nombre_items_aleatoires' => 'sometimes|nullable|integer|min:1',

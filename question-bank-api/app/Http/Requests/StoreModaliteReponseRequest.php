@@ -22,8 +22,8 @@ class StoreModaliteReponseRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'format_reponse_id'  => 'required|exists:format_reponses,id',
-            'item_id' => 'required|exists:items,id',
+             'format_reponse_id'  => 'required|exists:AQUALI_format_reponses,id',
+            'item_id' => 'required|exists:AQUALI_items,id',
              'intitule' => 'nullable|string|max:255',
                 'ordre' => 'sometimes|integer|min:0',
             'min_value' => 'nullable|string',
