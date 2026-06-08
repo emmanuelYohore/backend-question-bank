@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('bank_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name',255);
             $table->boolean('archived')->default(false);
             $table->timestamps();
         });

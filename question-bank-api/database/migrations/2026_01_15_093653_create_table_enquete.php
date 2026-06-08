@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('enquetes', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');        
-            $table->string('title');
-            $table->string('description');
-            $table->string('start_message');
-            $table->string('end_message');
+            $table->string('title',255);
+            $table->string('description',800);
+            $table->string('start_message',800);
+            $table->string('end_message',800);
             $table->boolean('archived')->default(false);
             $table->string('url_enquete');
             $table->timestamps();

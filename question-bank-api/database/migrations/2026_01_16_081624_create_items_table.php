@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignUuid('format_reponse_id')->constrained('format_reponses')->onDelete('cascade');
-            $table->string('question')->nullable(false);
+            $table->string('question',300)->nullable(false);
             $table->integer('min_case_to_check')->nullable(true);
             $table->integer('max_case_to_check')->nullable(true);
             $table->boolean('obligatoire')->default(true);
