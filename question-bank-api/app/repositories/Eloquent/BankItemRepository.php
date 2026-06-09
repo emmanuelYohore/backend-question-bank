@@ -35,7 +35,7 @@ class BankItemRepository implements BankItemRepositoryInterface
           return BankItem::where('user_id', $userId)
                     ->where('id', $bankItemId)
                     ->with(['items' => function ($query) {
-                        $query->orderBy('bank_item_items.ordre')
+                        $query->orderBy('AQUALI_bank_item_items.ordre')
                             ->with('formatReponse', 'modaliteReponses.formatReponse');
                     }])
                     ->firstOrFail();
@@ -51,7 +51,7 @@ class BankItemRepository implements BankItemRepositoryInterface
         return User::findOrFail($userId)
                 ->bankItems()
                 ->with(['items' => function ($query) {
-                    $query->orderBy('bank_item_items.ordre')
+                    $query->orderBy('AQUALI_bank_item_items.ordre')
                           ->with(['formatReponse', 'modaliteReponses.formatReponse']);
                 }])
                 ->get();

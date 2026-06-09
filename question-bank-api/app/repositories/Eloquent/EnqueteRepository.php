@@ -23,7 +23,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
             ->where('id', $enqueteId)
             ->with(['bankItems' => function ($query) {
                 $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
-                      ->orderBy('enquete_banks.ordre')
+                      ->orderBy('AQUALI_enquete_banks.ordre')
                       ->with(['items' => function ($q) {
                           $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
                               $mq->with('formatReponse')->orderBy('ordre');
@@ -48,7 +48,7 @@ class EnqueteRepository implements EnqueteRepositoryInterface
             ->enquetes()
             ->with(['bankItems' => function ($query) {
                 $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
-                      ->orderBy('enquete_banks.ordre')
+                      ->orderBy('AQUALI_enquete_banks.ordre')
                       ->with(['items' => function ($q) {
                           $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
                               $mq->with('formatReponse')->orderBy('ordre');

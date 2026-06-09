@@ -98,7 +98,7 @@ class BankItemController extends Controller
     {
         $data = $request->validate([
             'ordered_item_ids' => 'required|array',
-            'ordered_item_ids.*' => 'uuid|exists:items,id',
+            'ordered_item_ids.*' => 'uuid|exists:AQUALI_items,id',
         ]);
 
         $orderedItemIds = $data['ordered_item_ids'];
@@ -107,7 +107,7 @@ class BankItemController extends Controller
                             ->where('id', $bankItemId)
                             ->firstOrFail();
 
-        $attachedItemIds = $bankItem->items()->pluck('items.id')->toArray();
+        $attachedItemIds = $bankItem->items()->pluck('AQUALI_items.id')->toArray();
 
         $syncData = [];
         foreach ($orderedItemIds as $index => $itemId) {
@@ -150,15 +150,15 @@ class BankItemController extends Controller
         //Si l'item est archivée, on ne peut pas l'ajouter à la banque
 
             if (BankItem::whereHas('items', function ($query) use ($data) {
-                $query->whereIn('items.id', $data['item_ids']);
-                $query->where('items.archived', true);
+                $query->whereIn('AQUALI_items.id', $data['item_ids']);
+                $query->where('AQUALI_items.archived', true);
             })->exists()) {
                 return response()->json([
                     'error' => 'Vous ne pouvez pas ajouter d\'items archivés à cette bank'
                 ], 400);
             }
 
-        $existingItemIds = $bank->items()->pluck('items.id')->toArray();
+        $existingItemIds = $bank->items()->pluck('AQUALI_items.id')->toArray();
         $newItemIds = collect($data['item_ids'])->diff($existingItemIds)->values()->all();
 
         $attachData = [];
@@ -170,7 +170,7 @@ class BankItemController extends Controller
             $bank->items()->attach($attachData);
         }
 
-        $attachedItems = $bank->items()->whereIn('items.id', $newItemIds ?: $data['item_ids'])->get();
+        $attachedItems = $bank->items()->whereIn('AQUALI_items.id', $newItemIds ?: $data['item_ids'])->get();
         
         return response()->json([
             'message' => 'Items ajoutés à la bank avec succès',
