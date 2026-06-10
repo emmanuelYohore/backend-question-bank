@@ -52,13 +52,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('v1/enquetes', 'store');
         Route::put('v1/enquetes/{id}', 'update');
         Route::delete('v1/enquetes/{id}', 'destroy');
-
         Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items', 'attachBankItems');
         Route::delete('v1/users/{userId}/enquetes/{enqueteId}/bank-items/detach', 'detachBankItems');                     
         Route::get('v1/users/{userId}/enquetes/{enqueteId}', 'getOneEnqueteForUserId');
         Route::post('v1/users/{userId}/enquetes/{enqueteId}/bank-items/order', 'saveBankItemsOrder');
         Route::get('v1/users/{userId}/enquetes', 'getAllEnqueteForUserId');
-        // Route::get('v1/enquetes/{enqueteId}/reponses', 'getReponsesByEnquete');
         Route::get('v1/enquetes/{enqueteId}/export-reponses', 'exportResponsesToCsv');
         Route::get('v1/enquetes/{enqueteId}/export-variables', 'exportVariableDetailsToCsv');
     });
@@ -102,7 +100,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('v1/bank-items', 'store');
         
         Route::post('v1/users/{userId}/bank-items/{bankItemId}/items/order', 'saveItemsOrder');
-
         Route::get('v1/users/{userId}/bank-items/{bankItemId}', 'getOneBankItemForUserId');
         Route::get('v1/users/{userId}/bank-items', 'getAllBankItemForUserId');
         Route::post('v1/users/{userId}/bank-items/{bankItemId}/items', 'attachItems');        

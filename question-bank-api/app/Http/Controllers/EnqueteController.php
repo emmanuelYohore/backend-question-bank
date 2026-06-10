@@ -242,96 +242,99 @@ class EnqueteController extends Controller
      * CSV contains: respondent_id, datetime, item_code1, item_code2, ...
      */
     public function exportResponsesToCsv(string $enqueteId)
-    {
-        try {
-            $enquete = Enquete::findOrFail($enqueteId);
+{
+    try {
+        $enquete = Enquete::findOrFail($enqueteId);
 
-            $authenticatedUser = JWTAuth::parseToken()->authenticate();
-            if ($enquete->user_id !== $authenticatedUser->id) {
-                return response()->json([
-                    'error' => 'Vous n\'êtes pas autorisé à exporter les réponses de cette enquête'
-                ], 403);
-            }
-
-            $bankItems = $enquete->bankItems()
-                ->with('items')
-                ->orderByPivot('ordre')
-                ->get();
-
-            $orderedItems = [];
-            foreach ($bankItems as $bankItem) {
-                foreach ($bankItem->items as $item) {
-                    if (!isset($orderedItems[$item->id])) {
-                        $orderedItems[$item->id] = $item;
-                    }
-                }
-            }
-
-            $modaliteCodeMap = [];
-            foreach ($orderedItems as $item) {
-                $modalites = $item->modaliteReponses()->orderBy('ordre')->get();
-                $code = 1;
-                foreach ($modalites as $modalite) {
-                    $modaliteCodeMap[$modalite->id] = $code;
-                    $code++;
-                }
-            }
-
-            $repondants = $enquete->repondants()
-                ->with(['reponses' => function ($query) use ($enqueteId) {
-                    $query->where('enquete_id', $enqueteId)
-                          ->with('modaliteReponse');
-                }])
-                ->get();
-
-            $header = ['id_rep', 'dateheure'];
-            foreach ($orderedItems as $item) {
-                $header[] = $item->nom_court;
-            }
-
-            $rows = [];
-            foreach ($repondants as $repondant) {
-                $row = [
-                    $repondant->id,
-                    $repondant->started_at ? $repondant->started_at->format('Y/m/d H:i') : '',
-                ];
-
-                foreach ($orderedItems as $item) {
-                    $response = $repondant->reponses->firstWhere('item_id', $item->id);
-
-                    if ($response) {
-                        if ($response->modaliteReponse) {
-                            $code = $modaliteCodeMap[$response->modaliteReponse->id] ?? '';
-                        } else if ($response->valeur_texte) {
-                            $code = $response->valeur_texte;
-                        } else if ($response->valeur_evn) {
-                            $code = $response->valeur_evn;
-                        } else {
-                            $code = '';
-                        }
-                        $row[] = $code;
-                    } else {
-                        $row[] = '';
-                    }
-                }
-
-                $rows[] = $row;
-            }
-
-            $csvContent = $this->generateCsvContent([$header, ...$rows]);
-
-            return response($csvContent, 200)
-                ->header('Content-Type', 'text/csv; charset=utf-8')
-                ->header('Content-Disposition', 'attachment; filename="reponses_enquete_' . $enquete->id . '.csv"');
-
-        } catch (\Exception $e) {
+        $authenticatedUser = JWTAuth::parseToken()->authenticate();
+        if ($enquete->user_id !== $authenticatedUser->id) {
             return response()->json([
-                'message' => 'Erreur lors de l\'export des réponses',
-                'error'   => $e->getMessage()
-            ], 500);
+                'error' => 'Vous n\'êtes pas autorisé à exporter les réponses de cette enquête'
+            ], 403);
         }
-    }
 
+        $bankItems = $enquete->bankItems()
+            ->with('items')
+            ->orderByPivot('ordre')
+            ->get();
+
+        $orderedItems = [];
+        foreach ($bankItems as $bankItem) {
+            foreach ($bankItem->items as $item) {
+                if (!isset($orderedItems[$item->id])) {
+                    $orderedItems[$item->id] = $item;
+                }
+            }
+        }
+
+        $modaliteCodeMap = [];
+        foreach ($orderedItems as $item) {
+            $modalites = $item->modaliteReponses()->orderBy('ordre')->get();
+            $code = 1;
+            foreach ($modalites as $modalite) {
+                $modaliteCodeMap[$modalite->id] = $code;
+                $code++;
+            }
+        }
+
+        $repondants = $enquete->repondants()
+            ->with(['reponses' => function ($query) use ($enqueteId) {
+                $query->where('enquete_id', $enqueteId)
+                      ->with('modaliteReponse');
+            }])
+            ->get();
+
+        $header = ['id_rep', 'dateheure'];
+        foreach ($orderedItems as $item) {
+            $header[] = $item->nom_court;
+        }
+
+        $rows = [];
+        foreach ($repondants as $repondant) {
+            $row = [
+                $repondant->id,
+                $repondant->started_at 
+                        ? \Carbon\Carbon::parse($repondant->started_at)
+                        ->setTimezone('Europe/Paris')
+                        ->format('Y/m/d H:i') : '',
+            ];
+
+            foreach ($orderedItems as $item) {
+                $responses = $repondant->reponses->where('item_id', $item->id)->values();
+
+                if ($responses->isEmpty()) {
+                    $row[] = '';
+                } else {
+                    $codes = [];
+                    foreach ($responses as $response) {
+                        if ($response->modaliteReponse) {
+                            $codes[] = $modaliteCodeMap[$response->modaliteReponse->id] ?? '';
+                        } elseif ($response->valeur_texte) {
+                            $codes[] = $response->valeur_texte;
+                        } elseif ($response->valeur_evn) {
+                            $codes[] = $response->valeur_evn;
+                        }
+                    }
+                    $row[] = implode(';', array_filter($codes, fn($c) => $c !== ''));
+                }
+            }
+
+            $rows[] = $row;
+        }
+
+        $csvContent = $this->generateCsvContent([$header, ...$rows]);
+
+        return response($csvContent, 200)
+            ->header('Content-Type', 'text/csv; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="reponses_enquete_' . $enquete->id . '.csv"');
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Erreur lors de l\'export des réponses',
+            'error'   => $e->getMessage()
+        ], 500);
+    }
+}
     /**
      * Export variable details to CSV format
      * CSV contains: item_code, item_title, modality_code, modality_title
