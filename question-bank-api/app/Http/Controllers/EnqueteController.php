@@ -52,39 +52,58 @@ class EnqueteController extends Controller
 
     // si l'enquete est archivée on retourne l'enquete est archivée, sinon on retourne l'enquete avec les items mélangés si le mode de la banque est aléatoire
     public function getByUrl(string $url)
-    {
-        $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
-            ->with([
-                'bankItems' => function ($query) {
-                    $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
-                          ->orderBy('AQUALI_enquete_banks.ordre'); // ✅ Corrigé
-                },
-                'bankItems.items.formatReponse',
-                'bankItems.items.modaliteReponses',
-            ])
-            ->firstOrFail();
+{
+    $enquete = Enquete::where('url_enquete', 'like', '%' . $url)
+        ->with([
+            'bankItems' => function ($query) {
+                $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
+                      ->orderBy('AQUALI_enquete_banks.ordre');
+            },
+            'bankItems.items.formatReponse',
+            'bankItems.items.modaliteReponses',
+        ])
+        ->firstOrFail();
 
-        if ($enquete->archived) {
-            return response()->json([
-                'message' => "Cette enquête est archivée et n'est plus accessible"
-            ], 410);
-        }
+    if ($enquete->archived) {
+        return response()->json([
+            'message' => "Cette enquête est archivée et n'est plus accessible"
+        ], 410);
+    }
 
-        foreach ($enquete->bankItems as $bankItem) {
-            $mode = $bankItem->pivot->mode;
-            if ($mode === 'aleatoire') {
-                $bankItem->setRelation('items', $bankItem->items->shuffle());
+    foreach ($enquete->bankItems as $bankItem) {
+        $mode = $bankItem->pivot->mode;
+        if ($mode === 'aleatoire') {
+            $nombreItems = $bankItem->pivot->nombre_items_aleatoires;
+            $shuffled = $bankItem->items->shuffle();
+
+            if ($nombreItems && $nombreItems > 0) {
+                $shuffled = $shuffled->take($nombreItems);
             }
+
+            $bankItem->setRelation('items', $shuffled);
         }
-
-        return response()->json($enquete);
     }
 
-    public function getOneEnqueteForUserId(string $userId, string $enqueteId)
-    {
-        return response()->json($this->enqueteRepository->getOneEnqueteForUserId($userId, $enqueteId));
-    }
+    return response()->json($enquete);
+}
+  public function getOneEnqueteForUserId(string $userId, string $enqueteId)
+{
+    $enquete = Enquete::where('user_id', $userId)
+        ->where('id', $enqueteId)
+        ->withCount(['repondants' => function ($query) {
+            $query->whereNotNull('completed_at');
+        }])
+        ->with([
+            'bankItems' => function ($query) {
+                $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
+                      ->orderBy('AQUALI_enquete_banks.ordre');
+            },
+            'bankItems.items',
+        ])
+        ->firstOrFail();
 
+    return response()->json($enquete);
+}
     public function getAllEnqueteForUserId(string $userId, Request $request)
     {
         $query = Enquete::where('user_id', $userId);
@@ -170,7 +189,7 @@ class EnqueteController extends Controller
         ]);
 
         foreach ($data['bank_item_ids'] as $index => $bankItemId) {
-            $enqueteBank = $enquete->enqueteBanks()->where('bank_item_id', $bankItemId)->first(); // ✅ Corrigé : colonne, pas table
+            $enqueteBank = $enquete->enqueteBanks()->where('bank_item_id', $bankItemId)->first(); 
             if ($enqueteBank) {
                 $enqueteBank->ordre = $index;
                 $enqueteBank->save();
