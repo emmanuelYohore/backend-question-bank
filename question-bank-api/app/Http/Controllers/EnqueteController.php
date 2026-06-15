@@ -115,6 +115,35 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
+    public function clearResponses(string $enqueteId)
+{
+    try {
+        $enquete = Enquete::findOrFail($enqueteId);
+
+        $authenticatedUser = JWTAuth::parseToken()->authenticate();
+        if ($enquete->user_id !== $authenticatedUser->id) {
+            return response()->json([
+                'error' => 'Vous n\'êtes pas autorisé à vider les réponses de cette enquête'
+            ], 403);
+        }
+
+        // Supprimer toutes les réponses de l'enquête
+        Reponse::where('enquete_id', $enqueteId)->delete();
+
+        // Supprimer tous les répondants liés à l'enquête
+        $enquete->repondants()->detach();
+
+        return response()->json([
+            'message' => 'Les réponses de l\'enquête ont été vidées avec succès'
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Erreur lors de la suppression des réponses',
+            'error'   => $e->getMessage()
+        ], 500);
+    }
+}
     public function attachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
