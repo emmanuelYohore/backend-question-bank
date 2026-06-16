@@ -58,8 +58,9 @@ class EnqueteBankController extends Controller
             ]);
         } catch (\Throwable $th) {
              return response()->json([
-            'error deleted' 
-            ]);
+            'error deleted'
+            ], 500
+            );
         }
         
     }

@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -101,4 +108,61 @@ class AuthController extends Controller
             return response()->json(['message' => 'Token invalide'], 401);
         }
     }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+{
+    $email = $request->validated()['email'];
+
+    // Génère un token sécurisé et le stocke (hashé)
+    $token = Str::random(64);
+
+    DB::table('AQUALI_password_reset_tokens')->updateOrInsert(
+        ['email' => $email],
+        [
+            'token'      => hash('sha256', $token),
+            'created_at' => now(),
+        ]
+    );
+
+    $user      = $this->userRepository->findByEmail($email);
+    $resetUrl  = env('FRONTEND_URL') . '/reset-password?token=' . $token . '&email=' . urlencode($email);
+
+    Mail::to($email)->send(new ResetPasswordMail($resetUrl, $user->name));
+
+    return response()->json([
+        'message' => 'Un lien de réinitialisation a été envoyé à votre adresse email.'
+    ]);
+}
+
+public function resetPassword(ResetPasswordRequest $request)
+{
+    $data = $request->validated();
+
+    $record = DB::table('AQUALI_password_reset_tokens')
+        ->where('email', $data['email'])
+        ->first();
+
+    // Vérifie que le token existe, correspond et n'a pas expiré (60 min)
+    if (
+        !$record
+        || !hash_equals($record->token, hash('sha256', $data['token']))
+        || now()->diffInMinutes($record->created_at) > 60
+    ) {
+        return response()->json([
+            'message' => 'Token invalide ou expiré.'
+        ], 422);
+    }
+
+    $user = $this->userRepository->findByEmail($data['email']);
+    $this->userRepository->update($user->id, [
+        'password' => Hash::make($data['password']),
+    ]);
+
+    // Supprime le token utilisé
+    DB::table('AQUALI_password_reset_tokens')->where('email', $data['email'])->delete();
+
+    return response()->json([
+        'message' => 'Mot de passe réinitialisé avec succès.'
+    ]);
+}
 }

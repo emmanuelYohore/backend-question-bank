@@ -22,23 +22,27 @@ class UserController extends Controller
     }
 
     /**
-     * Récupère tous les users et recherche par email
+     * Récupère tous les users et recherche par email, name, surname
      */
     public function index(Request $request)
-    {
-        try {
-            $query = User::query();
-            if ($search = $request->input('search')) {
-            $query->where('email', 'like', "%{$search}%");
+{
+    try {
+        $query = User::query();
+
+        if ($search = $request->input('search')) {
+            $query->where('email', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('surname', 'like', "%{$search}%");
         }
-            return response()->json($this->userRepository->getAll());
-        } catch (GlobalUserException $e) {
-            return response()->json([
-                "message" => $e->notUsersMessage()
-            ], 404);
-                 
-        }
+
+        return response()->json($query->get());
+    } catch (GlobalUserException $e) {
+        return response()->json([
+            "message" => $e->notUsersMessage()
+        ], 404);
     }
+}
+
 
     /**
      * Crée un nouvel utilisateur
