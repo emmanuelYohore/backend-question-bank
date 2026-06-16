@@ -128,10 +128,8 @@ class EnqueteController extends Controller
             ], 403);
         }
 
-        // Supprimer toutes les réponses de l'enquête
         Reponse::where('enquete_id', $enqueteId)->delete();
 
-        // Supprimer tous les répondants liés à l'enquête
         $enquete->repondants()->detach();
 
         return response()->json([
