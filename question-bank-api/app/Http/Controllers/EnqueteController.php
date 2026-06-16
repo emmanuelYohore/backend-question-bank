@@ -98,7 +98,8 @@ class EnqueteController extends Controller
                 $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
                       ->orderBy('AQUALI_enquete_banks.ordre');
             },
-            'bankItems.items',
+            'bankItems.items.formatReponse',       
+            'bankItems.items.modaliteReponses',
         ])
         ->firstOrFail();
 

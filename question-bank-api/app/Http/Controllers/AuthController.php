@@ -142,11 +142,11 @@ public function resetPassword(ResetPasswordRequest $request)
         ->where('email', $data['email'])
         ->first();
 
-    // Vérifie que le token existe, correspond et n'a pas expiré (60 min)
+    // Vérifie que le token existe, correspond et n'a pas expiré (15 min)
     if (
         !$record
         || !hash_equals($record->token, hash('sha256', $data['token']))
-        || now()->diffInMinutes($record->created_at) > 60
+        || now()->diffInMinutes($record->created_at) > 15
     ) {
         return response()->json([
             'message' => 'Token invalide ou expiré.'

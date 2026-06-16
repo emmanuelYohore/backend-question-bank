@@ -27,12 +27,10 @@ Route::controller(RepondantController::class)->group(function () {
     Route::delete('v1/repondants/{id}', 'destroy');
 });
 
-// Public routes for anonymous enquete access
 Route::controller(EnqueteController::class)->group(function () {
     Route::get('v1/enquetes/by-url/{url}', 'getByUrl');
 });
 
-// Public routes for submitting responses
 Route::controller(ReponseController::class)->group(function () {
     Route::post('v1/reponses', 'store');
     Route::get('v1/reponses', 'index');
