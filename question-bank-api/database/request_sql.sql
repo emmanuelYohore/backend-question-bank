@@ -143,6 +143,13 @@ CREATE TABLE AQUALI_reponses (
     CONSTRAINT fk_rep_modalite FOREIGN KEY (modalite_reponse_id) REFERENCES AQUALI_modalite_reponses(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE AQUALI_password_reset_tokens (
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS migrations (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     migration VARCHAR(255) NOT NULL,

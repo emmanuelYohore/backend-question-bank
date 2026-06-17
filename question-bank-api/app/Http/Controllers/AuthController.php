@@ -21,6 +21,9 @@ class AuthController extends Controller
         private UserRepositoryInterface $userRepository
     ) {}
 
+    /**
+     *fonction pour l'inscription d'un utilisateur
+     */
     public function register(StoreUserRequest $request)
     {
         $data = $request->validated(); 
@@ -42,6 +45,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * fonction pour la connexion d'un utilisateur
+     */
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
@@ -62,6 +68,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * fonction pour le rafraîchissement du token
+     */
     public function refreshToken()  {
         try {
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
@@ -85,6 +94,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * fonction pour la déconnexion d'un utilisateur
+     */
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
@@ -94,6 +106,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * fonction pour récupérer les informations de l'utilisateur connecté
+     */
     public function me()
     {
         try {
@@ -109,8 +124,11 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * fonction pour la réinitialisation du mot de passe
+     */
     public function forgotPassword(ForgotPasswordRequest $request)
-{
+    {
     $email = $request->validated()['email'];
 
     // Génère un token sécurisé et le stocke (hashé)
@@ -133,6 +151,7 @@ class AuthController extends Controller
         'message' => 'Un lien de réinitialisation a été envoyé à votre adresse email.'
     ]);
 }
+
 
 public function resetPassword(ResetPasswordRequest $request)
 {

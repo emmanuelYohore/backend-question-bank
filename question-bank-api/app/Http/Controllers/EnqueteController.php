@@ -22,6 +22,9 @@ class EnqueteController extends Controller
         $this->enqueteRepository = $enqueteRepository;
     }
 
+    /**
+     * Affiche la liste des enquêtes
+     */
     public function index(Request $request)
     {
         $query = Enquete::query();
@@ -31,6 +34,9 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
+    /**
+     * Crée une nouvelle enquête
+     */
     public function store(StoreEnqueteRequest $request)
     {
         $data = $request->validated();
@@ -45,6 +51,9 @@ class EnqueteController extends Controller
         ], 201);
     }
 
+    /**
+     * Affiche une enquête en fonction de son id
+     */
     public function show(string $id)
     {
         return response()->json($this->enqueteRepository->getById($id));
@@ -86,6 +95,10 @@ class EnqueteController extends Controller
 
     return response()->json($enquete);
 }
+
+/**
+     * Récupère une enquête pour un utilisateur spécifique en fonction de l'id de l'utilisateur et de l'id de l'enquête
+     */
   public function getOneEnqueteForUserId(string $userId, string $enqueteId)
 {
     $enquete = Enquete::where('user_id', $userId)
@@ -105,6 +118,10 @@ class EnqueteController extends Controller
 
     return response()->json($enquete);
 }
+
+/**
+     * Récupère toutes les enquêtes de l'utilisateur
+     */
     public function getAllEnqueteForUserId(string $userId, Request $request)
     {
         $query = Enquete::where('user_id', $userId);
@@ -116,6 +133,9 @@ class EnqueteController extends Controller
         return response()->json($query->get());
     }
 
+    /**
+     * Vide les réponses d'une enquête spécifique
+     */
     public function clearResponses(string $enqueteId)
 {
     try {
@@ -143,6 +163,10 @@ class EnqueteController extends Controller
         ], 500);
     }
 }
+
+    /**
+     * Attache des banques d'items à une enquête spécifique
+     */
     public function attachBankItems(AttachBankItemsToEnqueteRequest $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -194,6 +218,9 @@ class EnqueteController extends Controller
         ], 200);
     }
 
+    /**
+     * Enregistre l'ordre des banques d'items dans une enquête spécifique
+     */
     public function saveBankItemsOrder(Request $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -232,6 +259,9 @@ class EnqueteController extends Controller
         ], 200);
     }
 
+    /**
+     * Retire des banques d'items d'une enquête spécifique
+     */
     public function detachBankItems(Request $request, string $userId, string $enqueteId)
     {
         $enquete = Enquete::findOrFail($enqueteId);
@@ -264,6 +294,9 @@ class EnqueteController extends Controller
         ], 200);
     }
 
+    /**
+     * Met à jour une enquête
+     */
     public function update(UpdateEnqueteRequest $request, string $id)
     {
         $data = $request->validated();
@@ -284,9 +317,8 @@ class EnqueteController extends Controller
         ]);
     }
 
-    /**
-     * Export survey responses to CSV format
-     * CSV contains: respondent_id, datetime, item_code1, item_code2, ...
+   /**
+     * Exporte les réponses d'une enquête spécifique au format CSV
      */
     public function exportResponsesToCsv(string $enqueteId)
 {
@@ -383,8 +415,7 @@ class EnqueteController extends Controller
     }
 }
     /**
-     * Export variable details to CSV format
-     * CSV contains: item_code, item_title, modality_code, modality_title
+     * Exporte les détails des variables d'une enquête spécifique au format CSV
      */
     public function exportVariableDetailsToCsv(string $enqueteId)
     {
@@ -446,8 +477,8 @@ class EnqueteController extends Controller
         }
     }
 
-    /**
-     * Helper function to generate CSV content
+   /**
+     * Génère le contenu CSV à partir des lignes fournies
      */
     private function generateCsvContent(array $rows): string
     {

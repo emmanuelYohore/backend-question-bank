@@ -15,11 +15,14 @@ class EnqueteBankController extends Controller
          $this->enqueteBankRepository = $enqueteBankRepository;
     }
 
+    /**
+     * Affiche la liste des enquete banks
+     */
     public function index()
     {
         return response()->json($this->enqueteBankRepository->getAll());
     }
-
+               
     public function store(StoreEnqueteBankRequest $request)
     {
         $data = $request->validated();
