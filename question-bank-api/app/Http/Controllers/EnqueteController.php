@@ -321,7 +321,7 @@ class EnqueteController extends Controller
      * Exporte les réponses d'une enquête spécifique au format CSV
      */
     public function exportResponsesToCsv(string $enqueteId)
-{
+    {
     try {
         $enquete = Enquete::findOrFail($enqueteId);
 
