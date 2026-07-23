@@ -20,11 +20,10 @@ class BankItemRepository implements BankItemRepositoryInterface
      */
     public function getById($id)
     {
-        $bankItemId = BankItem::findOrFail($id);
-        if (empty($bankItemId)) {
-            return "bank Item pas trouvé";
-        }
-        return $bankItemId;
+        return BankItem::with(['user', 'items' => function ($query) {
+            $query->orderBy('AQUALI_bank_item_items.ordre')
+                  ->with(['formatReponse', 'modaliteReponses.formatReponse']);
+        }])->findOrFail($id);
     }
 
     /**

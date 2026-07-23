@@ -14,7 +14,24 @@ class EnqueteRepository implements EnqueteRepositoryInterface
 
     public function getById($id)
     {
-        return Enquete::findOrFail($id);
+        $enquete = Enquete::with(['user', 'bankItems' => function ($query) {
+            $query->withPivot('id', 'mode', 'ordre', 'nombre_items_aleatoires')
+                  ->orderBy('AQUALI_enquete_banks.ordre')
+                  ->with(['items' => function ($q) {
+                      $q->with(['formatReponse', 'modaliteReponses' => function ($mq) {
+                          $mq->with('formatReponse')->orderBy('ordre');
+                      }]);
+                  }]);
+        }])->findOrFail($id);
+
+        $enquete->bankItems->transform(function ($bankItem) {
+            $bankItem->enquete_bank_id = $bankItem->pivot->id;
+            $bankItem->mode = $bankItem->pivot->mode;
+            $bankItem->nombre_items_aleatoires = $bankItem->pivot->nombre_items_aleatoires;
+            return $bankItem;
+        });
+
+        return $enquete;
     }
 
     public function getOneEnqueteForUserId($userId, $enqueteId)
