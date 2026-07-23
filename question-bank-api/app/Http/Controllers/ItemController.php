@@ -22,7 +22,8 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-        $query = Item::query()->with('formatReponse', 'modaliteReponses');
+        // include user so frontend can display creator name
+        $query = Item::query()->with('formatReponse', 'modaliteReponses', 'user');
         if ($search = $request->input('search')) {
             $query->where('question', 'like', "%{$search}%");
         }

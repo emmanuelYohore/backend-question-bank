@@ -28,7 +28,7 @@ class BankItemController extends Controller
      */
     public function index(Request $request)
     {
-        $query = BankItem::query();
+        $query = BankItem::query()->with('user');
         if ($search = $request->input('search')) {
             $query->where('name', 'like', "%{$search}%");
         }

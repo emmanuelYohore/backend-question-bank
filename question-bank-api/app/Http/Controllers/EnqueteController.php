@@ -27,7 +27,7 @@ class EnqueteController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Enquete::query();
+        $query = Enquete::query()->with('user');
         if ($search = $request->input('search')) {
             $query->where('title', 'like', "%{$search}%");
         }
