@@ -143,8 +143,7 @@ class AuthController extends Controller
     );
 
     $user      = $this->userRepository->findByEmail($email);
-    $resetUrl  = env('FRONTEND_URL','http://localhost:5173') . '/reset-password?token=' . $token . '&email=' . urlencode($email);
-
+    $resetUrl = config('app.frontend_url') . '/reset-password?token=' . $token . '&email=' . urlencode($email);
     Mail::to($email)->send(new ResetPasswordMail($resetUrl, $user->name));
 
     return response()->json([

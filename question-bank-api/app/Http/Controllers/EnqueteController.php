@@ -41,8 +41,7 @@ class EnqueteController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = JWTAuth::parseToken()->authenticate()->id;
-        $data['url_enquete'] = env('FRONTEND_URL', 'http://localhost:5173') . '/survey/' . Str::random(32);
-
+        $data['url_enquete'] = config('app.frontend_url') . '/survey/' . Str::random(32);
         $enquete = $this->enqueteRepository->create($data);
 
         return response()->json([
